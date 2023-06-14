@@ -13,19 +13,20 @@ class MainTab extends StatefulWidget {
 }
 
 class _MainTabState extends State<MainTab> {
-  String eventName = "111";
+  late UserEvent currentEvent;
   late User userModel;
 
   @override
   void initState() {
     super.initState();
-    eventName = widget.userModel!.full_name;
+    currentEvent = widget.userModel!.events[0];
     userModel = widget.userModel!;
   }
 
-  void changeEventName(String newName){
+  void changeEventName(UserEvent newName){
     setState((){
-      eventName = newName;
+      currentEvent = newName;
+      debugPrint(newName.id.toString());
     });
   }
 
@@ -57,7 +58,7 @@ class _MainTabState extends State<MainTab> {
                           child: Container(
                             padding: EdgeInsets.only(right: 13.0),
                             child: Text(
-                              eventName,
+                              currentEvent.title,
                               overflow: TextOverflow.ellipsis,
                               style: TextStyle(
                                 color: Colors.indigo,
@@ -68,7 +69,7 @@ class _MainTabState extends State<MainTab> {
                       ],
                     ),
                   ),
-                  ChangeEvent(notifyParent: changeEventName)
+                  ChangeEvent(changeEvent: changeEventName, events: userModel.events, currentEvent: currentEvent)
                 ],
               ),
             ),
@@ -81,14 +82,15 @@ class _MainTabState extends State<MainTab> {
                 padding: const EdgeInsets.only(right: 10),
                 child: ClipRRect(
                   child: SizedBox.fromSize(
-                  size: Size.fromRadius(25), // Image radius
-                  child: Image.network(userModel.access_token))
+                    size: Size.fromRadius(25), // Image radius
+                    // child: Image.network(userModel.access_token)
+                  )
                 ),
               ),
               Flexible(
                 child: Column(mainAxisAlignment: MainAxisAlignment.start, crossAxisAlignment: CrossAxisAlignment.start ,children: [
-                  Text(userModel.url_photo, overflow: TextOverflow.ellipsis,),
                   Text(userModel.full_name, overflow: TextOverflow.ellipsis,),
+                  Text('Оператор №${userModel.operator_id}', overflow: TextOverflow.ellipsis,),
                 ],),
               )
           ])
