@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'tabs/mainTab/mainTab.dart';
 import 'tabs/infoTab/infoTab.dart';
 import 'tabs/settingsTab/settingsTab.dart';
-import 'package:ticketok/models/authModel.dart' as user;
+import 'package:ticketok/models/authModel.dart';
 import 'dart:async';
 
 class ProfileMain extends StatefulWidget {
@@ -17,13 +17,19 @@ class ProfileMain extends StatefulWidget {
 }
 
 class _ProfileMainState extends State <ProfileMain> {
-  final String eventName = "111";
-  late Future <user.User> futureAlbum;
+  late String eventName;
+  late Future <User> userData;
 
   @override
   void initState() {
     super.initState();
-    futureAlbum = user.fetchData();
+    userData = fetchData();
+  }
+
+  void changeEvent(UserEvent event){
+    setState(() {
+      // userData = fetchData2();
+    });
   }
 
   @override
@@ -46,24 +52,26 @@ class _ProfileMainState extends State <ProfileMain> {
           children: [
             Column(
               children: [
-                FutureBuilder <user.User> (
-                  future: futureAlbum,
+                FutureBuilder <User> (
+                  future: userData,
                   builder: (context, snapshot) {
-                    if (snapshot.hasData) {
-                     // return Text(snapshot.data!.title);
-                      return MainTab(userModel: snapshot.data);
-                    } else if (snapshot.hasError) {
+                    if (snapshot.connectionState != ConnectionState.done) {
+                      return Padding(
+                      padding: const EdgeInsets.all(10.0),
+                      child: const CircularProgressIndicator(),
+                    );
+                    }
+                    if (snapshot.hasError) {
                       return Padding(
                         padding: const EdgeInsets.all(20.0),
                         child: Text('${snapshot.error}'),
                       );
                     }
-                    // By default, show a loading spinner.
-                    return Padding(
-                      padding: const EdgeInsets.all(10.0),
-                      child: const CircularProgressIndicator(),
-                    );
-                  },
+                    if (snapshot.hasData) {
+                      return MainTab(userModel: snapshot.data, changeEvent: changeEvent);
+                    }
+                    return Text("1234");
+                  }
                 ),
               ],
             ),

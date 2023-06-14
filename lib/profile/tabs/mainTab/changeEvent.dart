@@ -1,5 +1,7 @@
 // ignore_for_file: prefer_const_constructors
 
+import 'dart:js_interop';
+
 import 'package:flutter/material.dart';
 import 'package:ticketok/models/authModel.dart';
 
@@ -17,7 +19,7 @@ class ChangeEvent extends StatefulWidget {
 
 class _ChangeEventState extends State<ChangeEvent> {
 
-  late UserEvent selectedEvent;
+  late UserEvent selectedEvent = widget.currentEvent;
 
   void changeEvent(UserEvent newName){
     setState(() {
@@ -42,7 +44,9 @@ class _ChangeEventState extends State<ChangeEvent> {
             ),
             TextButton(
               onPressed: () => {
-                widget.changeEvent(selectedEvent),
+                if (!selectedEvent.isUndefinedOrNull){
+                  widget.changeEvent(selectedEvent),
+                },
                 Navigator.pop(context, 'OK'),
               },
               child: const Text('OK'),
@@ -70,7 +74,6 @@ class _DropdownButtonExampleState extends State<DropdownButtonExample> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     dropdownValue = widget.currentEvent;
   }

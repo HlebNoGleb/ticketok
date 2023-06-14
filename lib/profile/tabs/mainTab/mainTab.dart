@@ -6,7 +6,9 @@ import 'package:ticketok/models/authModel.dart';
 
 class MainTab extends StatefulWidget {
   final User? userModel;
-  const MainTab({super.key, required this.userModel});
+  final Function(UserEvent event) changeEvent;
+
+  const MainTab({super.key, required this.userModel, required this.changeEvent});
 
   @override
   State<MainTab> createState() => _MainTabState();
@@ -23,10 +25,11 @@ class _MainTabState extends State<MainTab> {
     userModel = widget.userModel!;
   }
 
-  void changeEventName(UserEvent newName){
+  void changeEventName(UserEvent event){
     setState((){
-      currentEvent = newName;
-      debugPrint(newName.id.toString());
+      currentEvent = event;
+      widget.changeEvent(event);
+      debugPrint(event.id.toString());
     });
   }
 

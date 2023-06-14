@@ -50,11 +50,9 @@ class UserEvent {
 
 Future <User> fetchData() async {
   await Future.delayed(const Duration(seconds: 1));
-
-  final userJson = await jsonHelper.fetchData("https://jsonplaceholder.typicode.com/photos/2", "response");
+  const testJson = "{\"response\":{\"operator_id\":1,\"full_name\":\"СнежанаТихонова\",\"url_photo\":\"path/to/photo\",\"access_token\":\"test_token\",\"events\":[{\"id\":1,\"title\":\"VivaBraslav2023\"},{\"id\":2,\"title\":\"Рокзабобров2023\"}]},\"method\":\"operator.auth\"}";
+  final userJson = await jsonHelper.fetchData("https://jsonplaceholder.typicode.com/photos/2", "response", testJson);
   final user = User.fromJson(userJson);
-  debugPrint(user.access_token);
+  debugPrint(user.full_name);
   return user;
 }
-
-
