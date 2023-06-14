@@ -8,9 +8,7 @@ import 'package:ticketok/models/authModel.dart';
 import 'dart:async';
 
 class ProfileMain extends StatefulWidget {
-  const ProfileMain({
-    super.key
-  });
+  const ProfileMain({super.key});
 
   @override
   State <ProfileMain> createState() => _ProfileMainState();

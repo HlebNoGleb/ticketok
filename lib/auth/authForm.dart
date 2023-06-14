@@ -1,46 +1,12 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
+import 'dart:js_interop';
+
 import 'package:flutter/material.dart';
-
-
-class Auth extends StatelessWidget {
-  const Auth({super.key});
-
-
-  @override
-  Widget build(BuildContext context) {
-    return Material(
-      child: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Image.asset('assets/images/logo.png'),
-            Text("Вход в Ticketok",
-              style: TextStyle(
-                  decoration: TextDecoration.none,
-                  fontSize: 30,
-                  color: Color.fromRGBO(0, 0, 0, 1)
-                ),
-              ),
-            Text("Система сканирования билетов",
-              style: TextStyle(
-                  decoration: TextDecoration.none,
-                  fontSize: 20,
-                  color: Color.fromRGBO(0, 0, 0, .5)
-                ),
-            ),
-            SizedBox(
-              width: 500,
-              child: Padding(
-                padding: const EdgeInsets.all(15.0),
-                child: AuthForm(),
-              ),
-            ),
-          ],
-        )
-      ),
-    );
-  }
-}
+import '../models/authModel.dart';
+import 'dart:convert';    
+import 'package:http/http.dart';
+import '../helpers/jsonHelper.dart';
+import '../helpers/urls.dart' as Urls;
 
 class AuthForm extends StatefulWidget {
   const AuthForm({super.key});
@@ -54,11 +20,11 @@ class _AuthFormState extends State<AuthForm> {
 
   TextEditingController loginController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
-
-
+  String validationErrror = '';
 
   @override
   Widget build(BuildContext context) {
+
     return Form(
       key: _formKey,
       child: Column(
@@ -96,29 +62,57 @@ class _AuthFormState extends State<AuthForm> {
             width: double.infinity,
             child: Padding(
               padding: const EdgeInsets.symmetric(vertical: 16.0),
-              child: ElevatedButton(
-                style: ButtonStyle(
-                  alignment: Alignment.center
-                ),
-                onPressed: () {
-                  // Validate will return true if the form is valid, or false if
-                  // the form is invalid.
-                  if (_formKey.currentState!.validate()) {
-                    // Process data
-                    debugPrint(loginController.text);
-                    debugPrint(passwordController.text);
-                    if (loginController.text == "111"){
-                      debugPrint("go to profile");
-                      Navigator.pushNamed(context, "/profile");
-                    }
-                  }
-                },
-                child: const Text('Войти'),
+              child: Column(
+                children: [
+                  ElevatedButton(
+                    style: ButtonStyle(
+                      alignment: Alignment.center
+                    ),
+                    onPressed: () async {
+                      // Validate will return true if the form is valid, or false if
+                      // the form is invalid.
+                      if (_formKey.currentState!.validate()) {
+
+                        var response = await _autorizeUserResponse(loginController.text, passwordController.text);
+
+                        if(response.statusCode != 200){
+                          setState(() {
+                            validationErrror = jsonDecode(response.body)['error']["error_msg"];
+                          });
+
+                          return;
+                        } 
+
+                        var user = User.fromJson(jsonDecode(response.body)['response']);
+
+                        // Process data
+                        debugPrint(loginController.text);
+                        debugPrint(passwordController.text);
+
+                        debugPrint("go to profile");
+
+                        Navigator.pushNamed(context, "/profile");
+                      }
+                    },
+                    child: const Text('Войти'),
+                  ),
+                  Text(validationErrror)
+                ],
               ),
             ),
           ),
         ],
       ),
     );
+  }
+  
+  Future<Response> _autorizeUserResponse(String login, String pass) async{
+    String basicAuth = 'Basic ${base64.encode(utf8.encode('$login:$pass'))}';
+    debugPrint(basicAuth);
+
+    Response r = await get(Uri.parse(Urls.AuthUrl),
+      headers: <String, String>{'authorization': basicAuth});
+
+    return r; 
   }
 }

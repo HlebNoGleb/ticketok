@@ -1,0 +1,1 @@
+const String Hostname = 'https://app.qdenya.com/public';

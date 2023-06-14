@@ -6,7 +6,6 @@ import 'package:ticketok/auth/authForm.dart';
 class Auth extends StatelessWidget {
   const Auth({super.key});
 
-
   @override
   Widget build(BuildContext context) {
     return Material(
