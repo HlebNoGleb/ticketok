@@ -1,6 +1,7 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
 
 import 'package:flutter/material.dart';
+import 'package:ticketok/models/event.dart';
 import 'tabs/mainTab/mainTab.dart';
 import 'tabs/infoTab/infoTab.dart';
 import 'tabs/settingsTab/settingsTab.dart';
@@ -18,12 +19,15 @@ class ProfileMain extends StatefulWidget {
 
 class _ProfileMainState extends State <ProfileMain> {
   late String eventName;
-  late Future <User> userData;
+  late Future<User> userData;
+  late Event eventData;
+
 
   @override
   void initState() {
     super.initState();
-    userData = fetchData();
+    userData = auth();
+    // eventData = getById(userData.events[0].id) as Event;
   }
 
   void changeEvent(UserEvent event){
