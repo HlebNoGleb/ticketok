@@ -1,7 +1,5 @@
 // ignore_for_file: prefer_const_constructors
 
-import 'dart:js_interop';
-
 import 'package:flutter/material.dart';
 import 'package:ticketok/models/authModel.dart';
 
@@ -44,7 +42,7 @@ class _ChangeEventState extends State<ChangeEvent> {
             ),
             TextButton(
               onPressed: () => {
-                if (!selectedEvent.isUndefinedOrNull){
+                if (selectedEvent != null){
                   widget.changeEvent(selectedEvent),
                 },
                 Navigator.pop(context, 'OK'),

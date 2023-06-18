@@ -1,7 +1,7 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
-import 'dart:js_interop';
-
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:ticketok/auth/cubit/user_cubit.dart';
 import '../models/authModel.dart';
 import 'dart:convert';    
 import 'package:http/http.dart';
@@ -84,7 +84,7 @@ class _AuthFormState extends State<AuthForm> {
                         } 
 
                         var user = User.fromJson(jsonDecode(response.body)['response']);
-
+                        BlocProvider.of<UserCubit>(context).login(user);
                         // Process data
                         debugPrint(loginController.text);
                         debugPrint(passwordController.text);

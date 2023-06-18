@@ -59,8 +59,16 @@ class InfoTab extends StatelessWidget {
 	// );
 	// }
     Widget build(BuildContext context) {
-    return Chip(
-      label: const Text('Aaron Burr'),
+    return Column(
+      children: [
+        ElevatedButton(onPressed: (){
+          Navigator.pushNamed(context, "/scan");
+        }, 
+        child: const Text('go to scan')),
+        Chip(
+          label: const Text('Aaron Burr'),
+        ),
+      ],
     );
   }
 }

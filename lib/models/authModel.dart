@@ -2,14 +2,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:ticketok/helpers/jsonHelper.dart' as jsonHelper;
 
-class Auth {
-  final String Username;
-  final String Password;
-
-  Auth(this.Username, this.Password);
-}
-
-
 class User {
   final num operator_id;
   final String full_name;
@@ -27,6 +19,17 @@ class User {
     // events: <List<UserEvent>.fromJson(json['events']),
     events: (json["events"] as List).map((i) => UserEvent.fromJson(i)).toList()
   );
+
+  factory User.empty() => User(
+    operator_id: 0,
+    full_name: '',
+    url_photo:'',
+    access_token: '',
+    // events: <List<UserEvent>.fromJson(json['events']),
+    events: List.empty()
+  );
+
+  bool isEmpty() => operator_id == 0;
 }
 
 class UserEvent {

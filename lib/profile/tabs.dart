@@ -1,6 +1,8 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
 
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:ticketok/auth/cubit/user_cubit.dart';
 import 'package:ticketok/models/event.dart';
 import 'tabs/mainTab/mainTab.dart';
 import 'tabs/infoTab/infoTab.dart';
@@ -24,7 +26,7 @@ class _ProfileMainState extends State <ProfileMain> {
   @override
   void initState() {
     super.initState();
-    userData = auth();
+    // userData = auth();
     // eventData = getById(userData.events[0].id) as Event;
   }
 
@@ -36,7 +38,8 @@ class _ProfileMainState extends State <ProfileMain> {
 
   @override
   Widget build(BuildContext context) {
-    return DefaultTabController(
+    return BlocBuilder<UserCubit, User>(builder: (BuildContext context, User userData) {    
+      return DefaultTabController(
       length: 3,
       child: Scaffold(
         appBar: AppBar(
@@ -54,27 +57,27 @@ class _ProfileMainState extends State <ProfileMain> {
           children: [
             Column(
               children: [
-                FutureBuilder <User> (
-                  future: userData,
-                  builder: (context, snapshot) {
-                    if (snapshot.connectionState != ConnectionState.done) {
-                      return Padding(
-                      padding: const EdgeInsets.all(10.0),
-                      child: const CircularProgressIndicator(),
-                    );
-                    }
-                    if (snapshot.hasError) {
-                      return Padding(
-                        padding: const EdgeInsets.all(20.0),
-                        child: Text('${snapshot.error}'),
-                      );
-                    }
-                    if (snapshot.hasData) {
-                      return MainTab(userModel: snapshot.data, changeEvent: changeEvent);
-                    }
-                    return Text("1234");
-                  }
-                ),
+                // FutureBuilder <User> (
+                //   future: userData,
+                //   builder: (context, snapshot) {
+                //     if (snapshot.connectionState != ConnectionState.done) {
+                //       return Padding(
+                //       padding: const EdgeInsets.all(10.0),
+                //       child: const CircularProgressIndicator(),
+                //     );
+                //     }
+                //     if (snapshot.hasError) {
+                //       return Padding(
+                //         padding: const EdgeInsets.all(20.0),
+                //         child: Text('${snapshot.error}'),
+                //       );
+                //     }
+                //     if (snapshot.hasData) {
+                      MainTab(userModel: userData, changeEvent: changeEvent)
+                    // }
+                    // return Text("1234");
+                  // }
+                // ),
               ],
             ),
             InfoTab(),
@@ -83,5 +86,6 @@ class _ProfileMainState extends State <ProfileMain> {
         ),
       ),
     );
+    });
   }
 }
