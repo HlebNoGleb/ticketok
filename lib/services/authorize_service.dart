@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'package:http/http.dart';
 import 'package:ticketok/models/auth_response.dart';
 import '../helpers/urls.dart' as Urls;
-import '../models/authModel.dart';
+import '../models/user.dart';
 
 Future<AuthResponse> authorizeUser(String login, String pass) async{
     String basicAuth = 'Basic ${base64.encode(utf8.encode('$login:$pass'))}';

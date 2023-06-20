@@ -1,4 +1,4 @@
-import 'authModel.dart';
+import 'user.dart';
 
 class AuthResponse{
   final String? error;

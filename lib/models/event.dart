@@ -1,5 +1,5 @@
 // ignore_for_file: non_constant_identifier_names
-import 'package:ticketok/helpers/jsonHelper.dart' as jsonHelper;
+import 'dart:convert';
 
 class Event {
   final num event_id;
@@ -22,9 +22,7 @@ class Event {
 Future <Event> getById(num id) async {
   await Future.delayed(const Duration(seconds: 1));
   const testJson = "{\"response\":{\"event_id\":1,\"title\":\"VivaBraslav2023\",\"permitted_zones\":[\"Vip2дня\",\"Кемпинг4дня\",\"АвтоGarage4дня\"],\"timetable\":[{\"from\":\"2023-05-01T00:00:00\",\"to\":\"2023-05-02T01:00:00\"},{\"from\":\"2023-05-01T00:00:00\",\"to\":\"2023-05-02T01:00:00\"}],\"total_hours\":\"123421\"},\"method\":\"events.getById\"}";
-  final userJson = await jsonHelper.fetchData("https://jsonplaceholder.typicode.com/photos/2", "response", testJson);
-  final event = Event.fromJson(userJson);
-
+  final event = Event.fromJson(jsonDecode(testJson));
   return event;
 }
 
