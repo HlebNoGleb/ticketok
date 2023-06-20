@@ -1,13 +1,12 @@
-// ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:ticketok/auth/cubit/user_cubit.dart';
+import 'package:ticketok/cubits/user_cubit.dart';
 import 'package:ticketok/models/event.dart';
-import 'tabs/mainTab/mainTab.dart';
-import 'tabs/infoTab/infoTab.dart';
-import 'tabs/settingsTab/settingsTab.dart';
-import 'package:ticketok/models/authModel.dart';
+import '../models/user_event.dart';
+import 'tabs/mainTab/main_tab.dart';
+import 'tabs/infoTab/info_tab.dart';
+import 'tabs/settingsTab/settings_tab.dart';
+import 'package:ticketok/models/user.dart';
 import 'dart:async';
 
 class ProfileMain extends StatefulWidget {
@@ -22,12 +21,9 @@ class _ProfileMainState extends State <ProfileMain> {
   late Future<User> userData;
   late Event eventData;
 
-
   @override
   void initState() {
     super.initState();
-    // userData = auth();
-    // eventData = getById(userData.events[0].id) as Event;
   }
 
   void changeEvent(UserEvent event){
@@ -44,44 +40,20 @@ class _ProfileMainState extends State <ProfileMain> {
       child: Scaffold(
         appBar: AppBar(
           automaticallyImplyLeading: false,
-          bottom: TabBar(
+          bottom: const TabBar(
             tabs: [
               Tab(text: "Главная", ),
               Tab(text: "Инфо", ),
               Tab(text: "Настройки", ),
             ],
           ),
-          title: Text('Tabs Demo'),
+          title: const Text('Tabs Demo'),
         ),
         body: TabBarView(
           children: [
-            Column(
-              children: [
-                // FutureBuilder <User> (
-                //   future: userData,
-                //   builder: (context, snapshot) {
-                //     if (snapshot.connectionState != ConnectionState.done) {
-                //       return Padding(
-                //       padding: const EdgeInsets.all(10.0),
-                //       child: const CircularProgressIndicator(),
-                //     );
-                //     }
-                //     if (snapshot.hasError) {
-                //       return Padding(
-                //         padding: const EdgeInsets.all(20.0),
-                //         child: Text('${snapshot.error}'),
-                //       );
-                //     }
-                //     if (snapshot.hasData) {
-                      MainTab(userModel: userData, changeEvent: changeEvent)
-                    // }
-                    // return Text("1234");
-                  // }
-                // ),
-              ],
-            ),
-            InfoTab(),
-            SettingsTab(),
+            MainTab(userModel: userData),
+            const InfoTab(),
+            const SettingsTab(),
           ],
         ),
       ),
