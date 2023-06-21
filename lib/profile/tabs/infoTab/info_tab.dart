@@ -1,21 +1,23 @@
 import 'package:flutter/material.dart';
+import 'package:ticketok/profile/tabs/infoTab/worked_hours.dart';
+import 'package:ticketok/profile/tabs/start_duty_button.dart';
+
+import '../../../models/user.dart';
+import '../../../models/user_event.dart';
 
 class InfoTab extends StatelessWidget {
-  const InfoTab({
-    super.key,
-  });
+  
+  final User? userModel;
+  final UserEvent? currentEvent;
+
+  const InfoTab({this.userModel, this.currentEvent, super.key });
 
   @override
     Widget build(BuildContext context) {
     return Column(
       children: [
-        ElevatedButton(onPressed: (){
-          Navigator.pushNamed(context, "/scan");
-        }, 
-        child: const Text('go to scan')),
-        Chip(
-          label: const Text('Aaron Burr'),
-        ),
+        WorkedHours(totalHours: currentEvent!.totalHours),
+        const StartDutyButton()
       ],
     );
   }

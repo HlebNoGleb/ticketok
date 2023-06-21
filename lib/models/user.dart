@@ -1,11 +1,11 @@
-import 'package:ticketok/models/user_event.dart';
+import 'package:ticketok/models/user_event_info.dart';
 
 class User {
   final num operatorId;
   final String fullName;
   final String urlPhoto;
   final String accessToken;
-  final List<UserEvent> events;
+  final List<UserEventInfo> events;
 
   User({required this.operatorId, required this.fullName, required this.urlPhoto, required this.accessToken, required this.events});
 
@@ -14,7 +14,7 @@ class User {
     fullName: json['full_name'],
     urlPhoto: json['url_photo'],
     accessToken: json['access_token'],
-    events: (json["events"] as List).map((i) => UserEvent.fromJson(i)).toList()
+    events: (json["events"] as List).map((i) => UserEventInfo.fromJson(i)).toList()
   );
 
   factory User.empty() => User(

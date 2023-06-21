@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:ticketok/cubits/user_cubit.dart';
+import 'package:ticketok/cubits/user_event_cubit.dart';
 import 'package:ticketok/models/event.dart';
 import '../models/user_event.dart';
+import '../models/user_event_info.dart';
 import 'tabs/mainTab/main_tab.dart';
 import 'tabs/infoTab/info_tab.dart';
 import 'tabs/settingsTab/settings_tab.dart';
@@ -26,7 +28,7 @@ class _ProfileMainState extends State <ProfileMain> {
     super.initState();
   }
 
-  void changeEvent(UserEvent event){
+  void changeEvent(UserEventInfo event){
     setState(() {
       // userData = fetchData2();
     });
@@ -34,7 +36,15 @@ class _ProfileMainState extends State <ProfileMain> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<UserCubit, User>(builder: (BuildContext context, User userData) {    
+    return Builder(builder: (BuildContext context) {    
+      
+      final User userData = context.watch<UserCubit>().state;
+      final UserEvent? currentEvent = context.watch<UserEventCubit>().state;
+
+      // if(userData.isEmpty()){
+      //   Navigator.pop(context);
+      // }
+      
       return DefaultTabController(
       length: 3,
       child: Scaffold(
@@ -42,18 +52,24 @@ class _ProfileMainState extends State <ProfileMain> {
           automaticallyImplyLeading: false,
           bottom: const TabBar(
             tabs: [
-              Tab(text: "Главная", ),
-              Tab(text: "Инфо", ),
+               Tab(text: "Главная", ),
+               Tab(text: "Инфо", ),
               Tab(text: "Настройки", ),
             ],
           ),
           title: const Text('Tabs Demo'),
         ),
-        body: TabBarView(
+        body: Column(
           children: [
-            MainTab(userModel: userData),
-            const InfoTab(),
-            const SettingsTab(),
+            Expanded(
+              child: TabBarView(
+                children: [
+                  MainTab(userModel: userData),
+                  InfoTab(userModel: userData, currentEvent: currentEvent),
+                  const SettingsTab(),
+                ],
+              ),
+            )
           ],
         ),
       ),

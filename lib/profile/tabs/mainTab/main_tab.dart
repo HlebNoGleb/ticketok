@@ -1,31 +1,40 @@
 import 'package:flutter/material.dart';
-import '../../../models/user_event.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:ticketok/profile/tabs/start_duty_button.dart';
+import 'package:ticketok/services/user_event_service.dart';
+import '../../../cubits/user_event_cubit.dart';
+import '../../../models/user_event_info.dart';
 import 'change_event.dart';
 import 'package:ticketok/models/user.dart';
 
 class MainTab extends StatefulWidget {
   final User? userModel;
 
-  const MainTab({super.key, required this.userModel});
+  MainTab({super.key, required this.userModel});
 
   @override
   State<MainTab> createState() => _MainTabState();
 }
 
 class _MainTabState extends State<MainTab> {
-  late UserEvent currentEvent;
+  late UserEventInfo currentEvent;
   late User userModel;
 
   @override
   void initState() {
     super.initState();
-    currentEvent = widget.userModel!.events[0];
+    currentEvent = widget.userModel!.events.first;
     userModel = widget.userModel!;
   }
 
-  void changeEventName(UserEvent event){
+  void changeEvent(UserEventInfo eventInfo) async{
+
+    var event = await GetEventById(eventInfo.id, userModel.accessToken);
+
+    BlocProvider.of<UserEventCubit>(context).setCurrentEvent(event);
+
     setState((){
-      currentEvent = event;
+      currentEvent = eventInfo;
     });
   }
 
@@ -64,7 +73,7 @@ class _MainTabState extends State<MainTab> {
                       ],
                     ),
                   ),
-                  ChangeEvent(changeEvent: changeEventName, events: userModel.events, currentEvent: currentEvent)
+                  ChangeEvent(changeEvent: changeEvent, events: userModel.events, currentEvent: currentEvent)
                 ],
               ),
             ),
@@ -111,11 +120,12 @@ class _MainTabState extends State<MainTab> {
             ),
           )
         ),
+        const StartDutyButton()
       ],
     );
   }
 
-  List<Widget> generateSectorChips(List<UserEvent> events) {
+  List<Widget> generateSectorChips(List<UserEventInfo> events) {
     return <Widget>[
       for(final item in events) Chip(label: Text(item.title)),
     ];

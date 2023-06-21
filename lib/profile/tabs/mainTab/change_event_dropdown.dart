@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import '../../../models/user_event.dart';
+import '../../../models/user_event_info.dart';
 
 class ChangeEventDropdown extends StatefulWidget {
-  final List<UserEvent> events;
-  final UserEvent currentEvent;
-  final Function(UserEvent name) notifyParent;
+  final List<UserEventInfo> events;
+  final UserEventInfo currentEvent;
+  final Function(UserEventInfo name) notifyParent;
   const ChangeEventDropdown({super.key, required this.events, required this.notifyParent, required this.currentEvent});
 
   @override
@@ -12,7 +12,7 @@ class ChangeEventDropdown extends StatefulWidget {
 }
 
 class _ChangeEventDropdownState extends State<ChangeEventDropdown> {
-  late UserEvent dropdownValue;
+  late UserEventInfo dropdownValue;
 
   @override
   void initState() {
@@ -22,20 +22,20 @@ class _ChangeEventDropdownState extends State<ChangeEventDropdown> {
 
   @override
   Widget build(BuildContext context) {
-    return DropdownButton<UserEvent>(
+    return DropdownButton<UserEventInfo>(
       value: dropdownValue,
       underline: Container(
         height: 2,
         color: Colors.deepPurpleAccent,
       ),
-      onChanged: (UserEvent? value) {
+      onChanged: (UserEventInfo? value) {
         setState(() {
           widget.notifyParent(value!);
           dropdownValue = value;
         });
       },
-      items: widget.events.map<DropdownMenuItem<UserEvent>>((UserEvent event) {
-        return DropdownMenuItem<UserEvent>(
+      items: widget.events.map<DropdownMenuItem<UserEventInfo>>((UserEventInfo event) {
+        return DropdownMenuItem<UserEventInfo>(
           value: event,
           child: Text(event.title),
         );

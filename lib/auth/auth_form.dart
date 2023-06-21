@@ -2,7 +2,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:ticketok/cubits/user_cubit.dart';
+import 'package:ticketok/cubits/user_event_cubit.dart';
 import 'package:ticketok/services/authorize_service.dart';
+import 'package:ticketok/services/user_event_service.dart';
 import 'package:ticketok/services/validation_service.dart';
 
 class AuthForm extends StatefulWidget {
@@ -76,8 +78,12 @@ class _AuthFormState extends State<AuthForm> {
 
       return;
     } 
+    var user = authResponse.user!;
+    BlocProvider.of<UserCubit>(context).login(user);
+    
+    var event = await GetEventById(user.events.first.id, user.accessToken);
 
-    BlocProvider.of<UserCubit>(context).login(authResponse.user!);
+    BlocProvider.of<UserEventCubit>(context).setCurrentEvent(event);
 
     await Navigator.pushNamed(context, "/profile");
   }

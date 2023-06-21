@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:ticketok/models/user.dart';
-import '../../../models/user_event.dart';
+import '../../../models/user_event_info.dart';
 import 'change_event_dropdown.dart';
 
 class ChangeEvent extends StatefulWidget {
-  final Function(UserEvent name) changeEvent;
-  final List<UserEvent> events;
-  final UserEvent currentEvent;
+  final Function(UserEventInfo name) changeEvent;
+  final List<UserEventInfo> events;
+  final UserEventInfo currentEvent;
   const ChangeEvent({super.key, required this.changeEvent, required this.events, required this.currentEvent});
 
   @override
@@ -15,9 +15,9 @@ class ChangeEvent extends StatefulWidget {
 
 class _ChangeEventState extends State<ChangeEvent> {
 
-  late UserEvent selectedEvent = widget.currentEvent;
+  late UserEventInfo selectedEvent = widget.currentEvent;
 
-  void changeEvent(UserEvent newName){
+  void changeEvent(UserEventInfo newName){
     setState(() {
       selectedEvent = newName;
     });
@@ -38,8 +38,8 @@ class _ChangeEventState extends State<ChangeEvent> {
               child: const Text('Cancel'),
             ),
             TextButton(
-              onPressed: () => {                
-                widget.changeEvent(selectedEvent),
+              onPressed: () async => {                
+                await widget.changeEvent(selectedEvent),
                 Navigator.pop(context, 'OK')
               },
               child: const Text('OK'),
