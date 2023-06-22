@@ -4,6 +4,7 @@ import 'package:ticketok/profile/tabs/start_duty_button.dart';
 
 import '../../../models/user.dart';
 import '../../../models/user_event.dart';
+import 'info_schedule.dart';
 
 class InfoTab extends StatelessWidget {
   
@@ -14,11 +15,17 @@ class InfoTab extends StatelessWidget {
 
   @override
     Widget build(BuildContext context) {
-    return Column(
-      children: [
-        WorkedHours(totalHours: currentEvent!.totalHours),
-        const StartDutyButton()
-      ],
+    return Padding(
+      padding: const EdgeInsets.all(16.0),
+      child: Column(
+        children: [
+          WorkedHours(totalHours: currentEvent!.totalHours),
+          const SizedBox(height: 16.0),
+          InfoSchedule(timetable: currentEvent!.timetable),
+          Divider(),
+          const StartDutyButton()
+        ],
+      ),
     );
   }
 }

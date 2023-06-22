@@ -4,7 +4,7 @@ import 'package:ticketok/cubits/user_cubit.dart';
 import 'package:ticketok/cubits/user_event_cubit.dart';
 import 'auth/auth.dart';
 import 'models/user.dart';
-import 'models/scan_page.dart';
+import 'scanner/scan_page.dart';
 import 'profile/tabs.dart';
 
 void main() {

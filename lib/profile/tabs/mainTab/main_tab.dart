@@ -40,13 +40,13 @@ class _MainTabState extends State<MainTab> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.start,
-      mainAxisSize: MainAxisSize.max,
-      children: [
-        Padding(
-          padding: const EdgeInsets.all(10.0),
-          child: Container(
+    return Padding(
+      padding: const EdgeInsets.all(16.0),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        mainAxisSize: MainAxisSize.max,
+        children: [
+          Container(
             color:  const Color.fromRGBO(229, 246, 253, 1),
             child: Padding(
               padding: const EdgeInsets.all(10),
@@ -78,10 +78,8 @@ class _MainTabState extends State<MainTab> {
               ),
             ),
           ),
-        ),
-        Padding(
-          padding: const EdgeInsets.all(10),
-          child: Row(children: [
+          const SizedBox(height: 16.0),
+          Row(children: [
               Padding(
                 padding: const EdgeInsets.only(right: 10),
                 child: ClipRRect(
@@ -98,11 +96,9 @@ class _MainTabState extends State<MainTab> {
                   ],
                 ),
               )
-          ])
-        ,),
-        Padding(
-          padding: const EdgeInsets.all(10),
-          child: SizedBox(
+          ]),
+          const SizedBox(height: 16.0),
+          SizedBox(
             width: double.infinity,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -118,10 +114,10 @@ class _MainTabState extends State<MainTab> {
                 )
               ],
             ),
-          )
-        ),
-        const StartDutyButton()
-      ],
+          ),
+          const StartDutyButton()
+        ],
+      ),
     );
   }
 
