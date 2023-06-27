@@ -85,6 +85,6 @@ class _AuthFormState extends State<AuthForm> {
 
     BlocProvider.of<UserEventCubit>(context).setCurrentEvent(event);
 
-    await Navigator.pushNamed(context, "/profile");
+    Navigator.pop(context);
   }
 }
