@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:ticketok/cubits/user_cubit.dart';
 import 'package:ticketok/cubits/user_event_cubit.dart';
+import 'package:ticketok/tickets_work/tickets_work.dart';
 import 'auth/auth.dart';
 import 'models/user.dart';
 import 'scanner/scan_page.dart';
@@ -36,6 +37,7 @@ class Ticketok extends StatelessWidget {
           '/': (context) => const Auth(),
           '/profile': (context) => const ProfileMain(),
           '/scan': (context) => const Scan(),
+          '/tickets_work': (context) => TicketsWorkPage()
         },
     ));
   }

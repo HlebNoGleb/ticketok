@@ -31,10 +31,19 @@ class _ScanState extends State<Scan>{
 @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Color.fromRGBO(247, 247, 247, 0.8),
       body: Column(
         children: <Widget>[
-          Expanded(
-            flex: 5,
+          Container(
+            decoration: BoxDecoration(
+            borderRadius:const BorderRadius.all(Radius.circular(4.0)),
+            border: Border.all(
+              color: Colors.white,
+              width: 1.0
+              )
+          ),
+            width: 210.0,
+            height: 210.0,
             child: QRView(
               key: qrKey,
               onQRViewCreated: _onQRViewCreated,

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:ticketok/scanner/scan_page.dart';
 
 class StartDutyButton extends StatelessWidget{
   const StartDutyButton({super.key});
@@ -21,7 +22,7 @@ class StartDutyButton extends StatelessWidget{
               shape: const ContinuousRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(10.0)))
             ),
             onPressed: (){
-              Navigator.pushNamed(context, "/scan");
+              Navigator.pushNamed(context, "/tickets_work");
             }, 
             child: const Text('Начать смену',style: TextStyle(fontSize: 18, color: Colors.white),)
           )
