@@ -65,8 +65,6 @@ class _TicketsWorkPageState extends State<TicketsWorkPage>{
     );
   }
 
-  @resume
-
   ElevatedButton enterIdByHandsButton() {
     return ElevatedButton(
             style: ElevatedButton.styleFrom(
