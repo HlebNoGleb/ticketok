@@ -6,7 +6,7 @@ import 'package:ticketok/tickets_work/tickets_work.dart';
 import 'auth/auth.dart';
 import 'models/user.dart';
 import 'scanner/scan_page.dart';
-import 'profile/tabs.dart';
+import 'profile/profile_main.dart';
 
 void main() {
   runApp(
@@ -34,8 +34,8 @@ class Ticketok extends StatelessWidget {
         title: 'Ticketok',
         initialRoute: '/',
         routes: {
-          '/': (context) => const Auth(),
-          '/profile': (context) => const ProfileMain(),
+          '/': (context) => const ProfileMain(),
+          '/auth': (context) => const Auth(),
           '/scan': (context) => const Scan(),
           '/tickets_work': (context) => TicketsWorkPage()
         },

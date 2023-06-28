@@ -2,14 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:ticketok/cubits/user_cubit.dart';
 import 'package:ticketok/cubits/user_event_cubit.dart';
-import 'package:ticketok/models/event.dart';
+import '../auth/auth.dart';
 import '../models/user_event.dart';
-import '../models/user_event_info.dart';
 import 'tabs/mainTab/main_tab.dart';
 import 'tabs/infoTab/info_tab.dart';
 import 'tabs/settingsTab/settings_tab.dart';
 import 'package:ticketok/models/user.dart';
-import 'dart:async';
 
 class ProfileMain extends StatefulWidget {
   const ProfileMain({super.key});
@@ -19,19 +17,9 @@ class ProfileMain extends StatefulWidget {
 }
 
 class _ProfileMainState extends State <ProfileMain> {
-  late String eventName;
-  late Future<User> userData;
-  late Event eventData;
-
   @override
   void initState() {
-    super.initState();
-  }
-
-  void changeEvent(UserEventInfo event){
-    setState(() {
-      // userData = fetchData2();
-    });
+    super.initState(); 
   }
 
   @override
@@ -39,17 +27,19 @@ class _ProfileMainState extends State <ProfileMain> {
     return Builder(builder: (BuildContext context) {    
       
       final User userData = context.watch<UserCubit>().state;
-      final UserEvent? currentEvent = context.watch<UserEventCubit>().state;
+      final UserEvent? currentEvent = context.watch<UserEventCubit>().state;        
 
-      // if(userData.isEmpty()){
-      //   Navigator.pop(context);
-      // }
-      
+      if(userData.isEmpty()){
+        Future.microtask(() => Navigator.pushNamed(
+          context, 
+        "/auth"
+        ));
+      }
+
       return DefaultTabController(
       length: 3,
       child: Scaffold(
         appBar: AppBar(
-          automaticallyImplyLeading: false,
           bottom: const TabBar(
             tabs: [
                Tab(text: "Главная", ),
