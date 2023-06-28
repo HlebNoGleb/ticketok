@@ -20,13 +20,13 @@ class _TicketsWorkPageState extends State<TicketsWorkPage>{
 
   @override
   void initState() {
-    super.initState();  
+    super.initState();
     hasInternetConnection = false;
-    setAsyncTest();  
+    setAsyncTest();
 
     hasNetworkSubscription = Connectivity().onConnectivityChanged.listen((ConnectivityResult result) {
       setState((){
-      hasInternetConnection = checkInternetByConnectivityResult(result);   
+      hasInternetConnection = checkInternetByConnectivityResult(result);
       });
     });
   }
@@ -35,7 +35,7 @@ class _TicketsWorkPageState extends State<TicketsWorkPage>{
     var hasConnection = await checkInternetConnection();
 
     setState((){
-      hasInternetConnection = hasConnection;   
+      hasInternetConnection = hasConnection;
     });
   }
 
@@ -44,7 +44,7 @@ class _TicketsWorkPageState extends State<TicketsWorkPage>{
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
-        title: const Text('Работа с билетами', style: TextStyle(fontSize: 24, color: Colors.white)),        
+        title: const Text('Работа с билетами', style: TextStyle(fontSize: 24, color: Colors.white)),
         backgroundColor: Color.fromRGBO(33, 150, 243, 1),
       ),
       body: Center(
@@ -71,7 +71,7 @@ class _TicketsWorkPageState extends State<TicketsWorkPage>{
               backgroundColor: const Color.fromRGBO(86, 204, 242, 1),
               fixedSize: const Size(245, 50)
             ),
-            onPressed: hasInternetConnection 
+            onPressed: hasInternetConnection
             ? (){
 
             }
