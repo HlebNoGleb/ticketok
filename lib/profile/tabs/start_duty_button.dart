@@ -13,7 +13,7 @@ class StartDutyButton extends StatelessWidget{
         children: [
           const Text(
             "Чтобы начать работу, нажмите кнопку ниже",
-            style: TextStyle(fontSize: 13), 
+            style: TextStyle(fontSize: 13),
             ),
           ElevatedButton(
             style: ElevatedButton.styleFrom(
@@ -23,7 +23,8 @@ class StartDutyButton extends StatelessWidget{
             ),
             onPressed: (){
               Navigator.pushNamed(context, "/tickets_work");
-            }, 
+              // todo - event start duty
+            },
             child: const Text('Начать смену',style: TextStyle(fontSize: 18, color: Colors.white),)
           )
         ],

@@ -17,8 +17,8 @@ class AuthForm extends StatefulWidget {
 class _AuthFormState extends State<AuthForm> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
-  TextEditingController loginController = TextEditingController();
-  TextEditingController passwordController = TextEditingController();
+  TextEditingController loginController = TextEditingController(text: "admin");
+  TextEditingController passwordController = TextEditingController(text: "admin");
   String? validationErrror;
 
   @override
@@ -77,10 +77,10 @@ class _AuthFormState extends State<AuthForm> {
       });
 
       return;
-    } 
+    }
     var user = authResponse.user!;
     BlocProvider.of<UserCubit>(context).login(user);
-    
+
     var event = await GetEventById(user.events.first.id, user.accessToken);
 
     BlocProvider.of<UserEventCubit>(context).setCurrentEvent(event);

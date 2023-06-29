@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
+import 'package:ticketok/tickets_work/manual_input_page.dart';
 import 'package:ticketok/services/check_internet_connection_service.dart';
 
 import '../scanner/scan_page.dart';
@@ -73,7 +74,9 @@ class _TicketsWorkPageState extends State<TicketsWorkPage>{
             ),
             onPressed: hasInternetConnection
             ? (){
-
+              Navigator.of(context).push(
+                PageRouteBuilder(pageBuilder: (_, __, ___) => ManualInput(), opaque: false)
+              );
             }
             : null,
             child: const Text('ВВЕСТИ ID ВРУЧНУЮ', style: TextStyle(
