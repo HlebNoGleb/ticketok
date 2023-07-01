@@ -3,7 +3,11 @@ import 'package:ticketok/models/ticket_check_transaction.dart';
 
 part "ticket_check_response.g.dart";
 
-enum ErrorType {@JsonValue('re-entry') reEntry, @JsonValue('not-allowed') notAllowed,@JsonValue('not-found') notFound}
+enum ErrorType {
+  @JsonValue('re-entry') reEntry,
+  @JsonValue('not-allowed') notAllowed,
+  @JsonValue('not-found') notFound
+}
 
 @JsonSerializable()
 class TicketCheckResponse{

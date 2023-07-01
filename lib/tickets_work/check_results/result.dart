@@ -4,9 +4,11 @@ import 'dart:io';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:json_annotation/json_annotation.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
-
+import 'package:ticketok/tickets_work/manual_input_page.dart';
 import '../../models/ticket_check_response.dart';
+import '../../scanner/scan_page.dart';
 
 class ScanResult extends StatefulWidget {
   final TicketCheckResponse ticketCheckResponse;
@@ -17,22 +19,6 @@ class ScanResult extends StatefulWidget {
 }
 
 class _ScanResultState extends State<ScanResult>{
-  final GlobalKey qrKey = GlobalKey(debugLabel: 'QR');
-  Barcode? result;
-  QRViewController? controller;
-  bool flashStatus = false;
-
-  // In order to get hot reload to work we need to pause the camera if the platform
-  // is android, or resume the camera if the platform is iOS.
-  @override
-  void reassemble() {
-    super.reassemble();
-    if (Platform.isAndroid) {
-      controller!.pauseCamera();
-    } else if (Platform.isIOS) {
-      controller!.resumeCamera();
-    }
-  }
 
 @override
   Widget build(BuildContext context) {
@@ -45,138 +31,134 @@ class _ScanResultState extends State<ScanResult>{
       body: Center(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: <Widget>[
-            SizedBox(
-              child: SizedBox(
-                child: Column(
-                  children: [
-                    widget.ticketCheckResponse.isValid
-                    ? Text(widget.ticketCheckResponse.errorMessage.toString())
-                    : Text(widget.ticketCheckResponse.errorMessageFriendly.toString())
-                  ],
-                ),
-              ),
-            ),
-            Container(
-                decoration: BoxDecoration(
-                borderRadius:const BorderRadius.all(Radius.circular(20.0)),
-                border: Border.all(
-                  color: Colors.white,
-                  width: 2.0,
-                )
-              ),
-              width: 210.0,
-              height: 210.0,
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Container(
-                  decoration: BoxDecoration(
-                    borderRadius:const BorderRadius.all(Radius.circular(16.0)),
-                    border: Border.all(
-                      color: Colors.white,
-                      width: 1.0,
-                    )
-                  ),
-                  width: 190.0,
-                  height: 190.0,
-                  child: QRView(
-                    key: qrKey,
-                    onQRViewCreated: _onQRViewCreated,
-                    overlayMargin: EdgeInsets.all(10),
-                  ),
-                ),
-              ),
-            ),
-            Column(
-              children: [
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: SizedBox(
-                    height:50,
-                    width: 50,
-                    child:FloatingActionButton(
-                    backgroundColor: const Color.fromRGBO(86, 204, 242, 1),
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(50),
-                        //border radius equal to or more than 50% of width
-                    ),
-                    onPressed: toggleFlashlight,
-                    child: flashStatus
-                    ? Icon(
-                      Icons.flashlight_on,
-                      color: Colors.white
-                    )
-                    : Icon(
-                      Icons.flashlight_off,
-                      color: Colors.white
-                    ),
-                  ),
-                 ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color.fromRGBO(86, 204, 242, 1),
-                      fixedSize: const Size(245, 50)
-                    ),
-                    onPressed: () => {},
-                    child: const Text('ВВЕСТИ ID ВРУЧНУЮ', style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 18
-                    )),
-                  ),
-                ),
-                ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    foregroundColor: Colors.transparent,
-                    shadowColor: Colors.transparent,
-                    surfaceTintColor: Colors.transparent,
-                    minimumSize: Size.fromHeight(80),
-                    shape: const ContinuousRectangleBorder(),
-                    backgroundColor: Colors.transparent,
-                  ),
-                  onPressed: (){
-                    Navigator.pop(context);
-                  },
-                  child: const Text("Вернуться назад", style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 18,
-                  )),
-                ),
-              ],
-            ),
-            Center(
-              child: (result != null)
-                  ? Text(
-                      'Barcode Type: ${describeEnum(result!.format)}   Data: ${result!.code}')
-                  : Text('Scan a code'),
-            )
-          ],
+          children: [
+            endWorkButton(context),
+            SizedBox(height: 200),
+            icon(widget.ticketCheckResponse.isValid),
+            SizedBox(height: 20),
+            text(widget.ticketCheckResponse),
+            SizedBox(height: 100,),
+            enterIdByHandsButton(),
+            SizedBox(height: 15),
+            openScannerButton(context)
+          ]
         ),
       ),
-    );
+      );
   }
 
-void _onQRViewCreated(QRViewController controller) {
-    this.controller = controller;
-    controller.scannedDataStream.listen((scanData) {
-      setState(() {
-        result = scanData;
-      });
-    });
+Column text(TicketCheckResponse ticketCheckResponse) {
+  const successTitle = 'Наденьте гостю браслет.';
+  const successSubTitle = 'Вход разрешён';
+
+  if (ticketCheckResponse.isValid){
+    return Column(children: [
+      Text(successTitle, style: TextStyle(fontSize: 24)),
+      Text(successSubTitle, style: TextStyle(fontSize: 16)),
+    ]);
   }
 
-  @override
-  void dispose() {
-    controller?.dispose();
-    super.dispose();
+  var title = "";
+  var subTitle = "";
+
+  switch (ticketCheckResponse.errorType) { // todo - переделать на Enum ErrorType
+    case "not-allowed":
+      title = "Невалидный билет";
+      subTitle = "Категория билета не соответствует разрешённым для данного сканера. Объясните гостю, где он может обменять свой билет.";
+    case "re-entry":
+      title = "Повторный вход";
+      subTitle = "Откажите гостю во входе, объяснив ситуацию. При необходимости, пригласите менеджера входной группы.";
+    case "not-found":
+      title = "Билет не найден";
+      subTitle = "Возможно, билет подделан. Проверьте ещё раз, при необходимости позовите менеджера.";
+      break;
+    default:
+      title = "Билет не найден";
+      subTitle = "Возможно, билет подделан. Проверьте ещё раз, при необходимости позовите менеджера.";
   }
 
-  void toggleFlashlight() async{
-    flashStatus = (await controller!.getFlashStatus())!;
-    await controller?.toggleFlash();
-  }
+  return Column(children: [
+    Text(title, style: TextStyle(fontSize: 24)),
+    Text(subTitle, style: TextStyle(fontSize: 16)),
+  ]);;
 }
 
+SizedBox icon(bool isValid) {
+  return SizedBox(
+      height:70,
+      width: 70,
+      child:FloatingActionButton(
+      backgroundColor: isValid ? const Color.fromRGBO(42, 184, 73, 1) : const Color.fromRGBO(210, 9, 57, 1),
+      shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(50),
+          //border radius equal to or more than 50% of width
+      ),
+      onPressed: null,
+      child: isValid
+      ? Icon(
+        Icons.check,
+        color: Colors.white,
+        size: 40,
+      )
+      : Icon(
+        Icons.lock,
+        color: Colors.white,
+        size: 40,
+      )
+    ),
+  );
+}
+ElevatedButton enterIdByHandsButton() {
+    return ElevatedButton(
+            style: ElevatedButton.styleFrom(
+              backgroundColor: const Color.fromRGBO(86, 204, 242, 1),
+              fixedSize: const Size(245, 50)
+            ),
+            onPressed: (){
+              Navigator.of(context).push(
+                PageRouteBuilder(pageBuilder: (_, __, ___) => ManualInput(), opaque: false)
+              );
+            },
+            child: const Text('ВВЕСТИ ID ВРУЧНУЮ', style: TextStyle(
+              color: Colors.white,
+              fontSize: 18
+            )),
+          );
+  }
+
+  ElevatedButton openScannerButton(BuildContext context) {
+    return ElevatedButton(
+            style: ElevatedButton.styleFrom(
+              backgroundColor: const Color.fromRGBO(33, 150, 243, 1),
+              fixedSize: const Size(245, 50)
+            ),
+            onPressed:  (){
+              Navigator.of(context).push(
+                PageRouteBuilder(pageBuilder: (_, __, ___) => Scan(), opaque: false)
+              );
+            },
+            child: const Text('ОТКРЫТЬ СКАННЕР', style: TextStyle(
+              color: Colors.white,
+              fontSize: 18
+            )),
+          );
+  }
+
+  ElevatedButton endWorkButton(BuildContext context) {
+    return ElevatedButton(
+            style: ElevatedButton.styleFrom(
+              shadowColor: Colors.transparent,
+              surfaceTintColor: Colors.transparent,
+              minimumSize: Size.fromHeight(80),
+              shape: const ContinuousRectangleBorder()
+            ),
+            onPressed: (){
+              Navigator.pop(context);
+            },
+            child: const Text("ЗАВЕРШИТЬ СМЕНУ", style: TextStyle(
+              color: Colors.red,
+              fontSize: 18,
+            )),
+          );
+  }
+}
