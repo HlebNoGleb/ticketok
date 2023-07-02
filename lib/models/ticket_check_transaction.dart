@@ -10,7 +10,7 @@ class TicketCheckTransaction{
   final DateTime datetime;
 
   @JsonKey(name: 'operator_id') 
-  final String? operatorId;
+  final int? operatorId;
 
   @JsonKey(name: 'operator_name')
   final String? operatorName;

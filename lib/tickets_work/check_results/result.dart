@@ -219,7 +219,7 @@ SizedBox repeat(String accessToken, num id, String ticket){
 
     Navigator.pop(context);
 
-    var ticketResult = await CheckTicket(ticketIdController.text, id, accessToken);
+    var ticketResult = await checkTicket(ticketIdController.text, id, accessToken);
       Navigator.of(context).push(
         PageRouteBuilder(pageBuilder: (_, __, ___) => ScanResult(ticketCheckResponse: ticketResult,), opaque: false)
       );

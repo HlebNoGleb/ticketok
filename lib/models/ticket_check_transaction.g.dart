@@ -13,7 +13,7 @@ TicketCheckTransaction _$TicketCheckTransactionFromJson(
       json['type'] as String,
       json['title'] as String,
       DateTime.parse(json['datetime'] as String),
-      json['operator_id'] as String?,
+      json['operator_id'] as int?,
       json['operator_name'] as String?,
     );
 
