@@ -34,6 +34,8 @@ class _ProfileMainState extends State <ProfileMain> {
           context, 
         "/auth"
         ));
+
+        return Scaffold();
       }
 
       return DefaultTabController(
