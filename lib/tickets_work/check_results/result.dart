@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
+import 'package:ticketok/models/ticket_check_transaction.dart';
 import 'package:ticketok/tickets_work/manual_input_page.dart';
 import '../../cubits/user_cubit.dart';
 import '../../cubits/user_event_cubit.dart';
@@ -54,6 +55,7 @@ class _ScanResultState extends State<ScanResult>{
             text(widget.ticketCheckResponse),
             SizedBox(height: 100,),
             content(widget.ticketCheckResponse, userData.accessToken, currentEvent!.id),
+            SizedBox(child: !widget.ticketCheckResponse.isValid ? goBackButton(context) : null)
           ]
         ),
       ),
@@ -144,10 +146,18 @@ SizedBox content (TicketCheckResponse ticketCheckResponse, String accessToken, n
   switch (ticketCheckResponse.errorType) { // todo - переделать на Enum ErrorType
     case "not-allowed":
       child = null;
-    case "re-entry":
-      child = Text("Тут текст транзакций которые почему то не десериализуются");
     case "not-found":
-      child = repeat(accessToken, id, ticketCheckResponse.ticket);
+      child = Column(
+        children: [
+          const Text('Транзакции', style: TextStyle(
+              color: Colors.grey,
+              fontSize: 14
+          )),
+          transactions(ticketCheckResponse.transactions),
+        ],
+      );
+    // case "not-found":
+    //   child = repeat(accessToken, id, ticketCheckResponse.ticket);
       break;
     default:
       child = null;
@@ -157,6 +167,22 @@ SizedBox content (TicketCheckResponse ticketCheckResponse, String accessToken, n
     height: 250,
     child: child
   );
+}
+
+Column transactions (List<TicketCheckTransaction>? transactions){
+  if (transactions == null) {
+    return Column();
+  }
+
+  return Column(children: transactions.map((i) {
+    return Row(
+      children: [
+        Text(i.datetime.toString()),
+        Text(i.title.toString()),
+        Text("(${i.operatorId}${i.operatorName})"),
+      ],
+    );
+  }).toList());
 }
 
 SizedBox repeat(String accessToken, num id, String ticket){
@@ -189,22 +215,6 @@ SizedBox repeat(String accessToken, num id, String ticket){
               )),
             ),
           ),
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                backgroundColor: const Color.fromRGBO(86, 204, 242, 1),
-                fixedSize: const Size(245, 50)
-              ),
-              onPressed: () => {
-                Navigator.pop(context)
-              },
-              child: const Text('Назад', style: TextStyle(
-                color: Colors.white,
-                fontSize: 18
-              )),
-            ),
-          ),
         ],
       ),
     ),
@@ -219,7 +229,7 @@ SizedBox repeat(String accessToken, num id, String ticket){
 
     Navigator.pop(context);
 
-    var ticketResult = await CheckTicket(ticketIdController.text, id, accessToken);
+    var ticketResult = await checkTicket(ticketIdController.text, id, accessToken);
       Navigator.of(context).push(
         PageRouteBuilder(pageBuilder: (_, __, ___) => ScanResult(ticketCheckResponse: ticketResult,), opaque: false)
       );
@@ -277,5 +287,21 @@ ElevatedButton enterIdByHandsButton() {
               fontSize: 18,
             )),
           );
+  }
+
+  ElevatedButton goBackButton(BuildContext context) {
+    return ElevatedButton(
+      style: ElevatedButton.styleFrom(
+        backgroundColor: const Color.fromRGBO(33, 150, 243, 1),
+        fixedSize: const Size(245, 50)
+      ),
+      onPressed: (){
+        Navigator.pop(context);
+      },
+      child: const Text("Назад", style: TextStyle(
+        color: Colors.white,
+        fontSize: 18,
+      )),
+    );
   }
 }
