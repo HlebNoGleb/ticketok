@@ -4,11 +4,18 @@ import 'dart:io';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
 import 'package:ticketok/tickets_work/manual_input_page.dart';
+import '../../cubits/user_cubit.dart';
+import '../../cubits/user_event_cubit.dart';
 import '../../models/ticket_check_response.dart';
+import '../../models/user.dart';
+import '../../models/user_event.dart';
 import '../../scanner/scan_page.dart';
+import '../../services/ticket_service.dart';
+import '../../services/validation_service.dart';
 
 class ScanResult extends StatefulWidget {
   final TicketCheckResponse ticketCheckResponse;
@@ -20,8 +27,16 @@ class ScanResult extends StatefulWidget {
 
 class _ScanResultState extends State<ScanResult>{
 
+   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  TextEditingController ticketIdController = TextEditingController();
+
 @override
   Widget build(BuildContext context) {
+    return Builder(
+      builder: (context) {
+        final User userData = context.watch<UserCubit>().state;
+        // вот это вообще странно. типо весь этот кубит лежит в контексте и его можно вызывать только внутри билдера виджет билд
+        final UserEvent? currentEvent = context.watch<UserEventCubit>().state;
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
@@ -38,13 +53,13 @@ class _ScanResultState extends State<ScanResult>{
             SizedBox(height: 20),
             text(widget.ticketCheckResponse),
             SizedBox(height: 100,),
-            enterIdByHandsButton(),
-            SizedBox(height: 15),
-            openScannerButton(context)
+            content(widget.ticketCheckResponse, userData.accessToken, currentEvent!.id),
           ]
         ),
       ),
       );
+      }
+    );
   }
 
 Column text(TicketCheckResponse ticketCheckResponse) {
@@ -80,7 +95,7 @@ Column text(TicketCheckResponse ticketCheckResponse) {
   return Column(children: [
     Text(title, style: TextStyle(fontSize: 24)),
     Text(subTitle, style: TextStyle(fontSize: 16)),
-  ]);;
+  ]);
 }
 
 SizedBox icon(bool isValid) {
@@ -108,6 +123,108 @@ SizedBox icon(bool isValid) {
     ),
   );
 }
+
+SizedBox content (TicketCheckResponse ticketCheckResponse, String accessToken, num id) {
+
+  if (ticketCheckResponse.isValid){
+    return SizedBox(
+      height: 250,
+      child: Column(
+        children: [
+          enterIdByHandsButton(),
+          SizedBox(height: 15),
+          openScannerButton(context)
+        ],
+      )
+    );
+  }
+
+  var child;
+
+  switch (ticketCheckResponse.errorType) { // todo - переделать на Enum ErrorType
+    case "not-allowed":
+      child = null;
+    case "re-entry":
+      child = Text("Тут текст транзакций которые почему то не десериализуются");
+    case "not-found":
+      child = repeat(accessToken, id, ticketCheckResponse.ticket);
+      break;
+    default:
+      child = null;
+  }
+
+  return SizedBox(
+    height: 250,
+    child: child
+  );
+}
+
+SizedBox repeat(String accessToken, num id, String ticket){
+  ticketIdController.text = ticket;
+  return SizedBox(
+    width: 250,
+    child: Form(
+      key: _formKey,
+      child: Column(
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: TextFormField(
+              controller: ticketIdController,
+              decoration: const InputDecoration(hintText: 'ID билета'),
+              validator: validateTicketId,
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                backgroundColor: const Color.fromRGBO(33, 150, 243, 1),
+                fixedSize: const Size(245, 50)
+              ),
+              onPressed: () => submit(accessToken, id, context),
+              child: const Text('Повторить', style: TextStyle(
+                color: Colors.white,
+                fontSize: 18
+              )),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                backgroundColor: const Color.fromRGBO(86, 204, 242, 1),
+                fixedSize: const Size(245, 50)
+              ),
+              onPressed: () => {
+                Navigator.pop(context)
+              },
+              child: const Text('Назад', style: TextStyle(
+                color: Colors.white,
+                fontSize: 18
+              )),
+            ),
+          ),
+        ],
+      ),
+    ),
+  );
+}
+
+  void submit(String accessToken, num id, BuildContext context111) async{
+
+    if (!_formKey.currentState!.validate()) {
+      return;
+    }
+
+    Navigator.pop(context);
+
+    var ticketResult = await CheckTicket(ticketIdController.text, id, accessToken);
+      Navigator.of(context).push(
+        PageRouteBuilder(pageBuilder: (_, __, ___) => ScanResult(ticketCheckResponse: ticketResult,), opaque: false)
+      );
+    }
+
 ElevatedButton enterIdByHandsButton() {
     return ElevatedButton(
             style: ElevatedButton.styleFrom(
