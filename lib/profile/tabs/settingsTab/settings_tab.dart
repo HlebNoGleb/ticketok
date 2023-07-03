@@ -4,9 +4,9 @@ import 'package:ticketok/services/offline_ticket_service.dart';
 import '../../../models/user.dart';
 
 class SettingsTab extends StatelessWidget {
-  
+
   final User? userModel;
-  
+
   const SettingsTab({
     super.key, this.userModel,
   });
@@ -24,7 +24,7 @@ class SettingsTab extends StatelessWidget {
   }
 
   void sync() async{
-      var database =await DownloadOfflineBase(userModel!.accessToken);
+      var database = await downloadOfflineBase(userModel!.accessToken);
 
       await syncDatabase(database);
 

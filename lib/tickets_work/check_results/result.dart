@@ -28,6 +28,16 @@ class _ScanResultState extends State<ScanResult>{
 
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   TextEditingController ticketIdController = TextEditingController();
+
+  late TicketCheckResponse ticketCheckResponse;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    ticketCheckResponse = widget.ticketCheckResponse;
+  }
+
   var maskFormatter = MaskTextInputFormatter(
     mask: '####-####-####',
     filter: { "#": RegExp(r'[A-Z]') },
@@ -54,21 +64,21 @@ class _ScanResultState extends State<ScanResult>{
             endWorkButton(context),
             Column(
               children: [
-                icon(widget.ticketCheckResponse.isValid),
+                icon(ticketCheckResponse.isValid),
                 SizedBox(height: 20),
                 Container(
                   constraints: BoxConstraints(minWidth: 200, maxWidth: 400),
                   padding: EdgeInsets.all(10),
-                  child: text(widget.ticketCheckResponse)
+                  child: text(ticketCheckResponse)
                 ),
               ],
             ),
             SizedBox(
               width: 350,
-              child: content(widget.ticketCheckResponse, userData.accessToken, currentEvent!.id)
+              child: content(ticketCheckResponse, userData.accessToken, currentEvent!.id)
             ),
             SizedBox(
-              child: !widget.ticketCheckResponse.isValid
+              child: !ticketCheckResponse.isValid
                 ? Padding(
                   padding: const EdgeInsets.all(10.0),
                   child: goBackButton(context),
@@ -264,7 +274,7 @@ SizedBox repeat(String accessToken, num id, String ticket){
       return;
     }
 
-    Navigator.pop(context);
+    // Navigator.pop(context);
 
     Navigator.of(context).push(
       PageRouteBuilder(pageBuilder: (_, __, ___) => Loader(), opaque: false)
@@ -272,11 +282,15 @@ SizedBox repeat(String accessToken, num id, String ticket){
 
     var ticketResult = await checkTicket(ticketIdController.text, id, accessToken);
 
+    setState(() {
+      ticketCheckResponse = ticketResult;
+    });
+
     Navigator.pop(context);
 
-    Navigator.of(context).push(
-      PageRouteBuilder(pageBuilder: (_, __, ___) => ScanResult(ticketCheckResponse: ticketResult,), opaque: false)
-    );
+    // Navigator.of(context).push(
+    //   PageRouteBuilder(pageBuilder: (_, __, ___) => ScanResult(ticketCheckResponse: ticketResult,), opaque: false)
+    // );
     }
 
 ElevatedButton enterIdByHandsButton() {
