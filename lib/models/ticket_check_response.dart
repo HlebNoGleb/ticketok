@@ -30,4 +30,32 @@ class TicketCheckResponse{
   TicketCheckResponse(this.ticket, this.isValid, this.errorType, this.errorMessage, this.errorMessageFriendly, this.transactions);
 
   factory TicketCheckResponse.fromJson(Map<String, dynamic> json) => _$TicketCheckResponseFromJson(json);
+
+  factory TicketCheckResponse.validTicket(String ticket) => TicketCheckResponse(
+    ticket, 
+    true,
+    null,
+    null,
+    null, 
+    null);
+
+  factory TicketCheckResponse.invalidTicket(String ticket, ErrorType errorType) {
+    String errorMessageFriendly;
+
+    errorMessageFriendly = switch(errorType){
+      ErrorType.notAllowed => 'Категория билета не соответствует разрешенным для данного сканера. Объясните гостю, где он может обменять свой билет.',
+      ErrorType.reEntry => 'Откажите гостю во входе, объяснив ситуацию. При необходимости пригласите менеджера входной группы.',
+      ErrorType.notFound => 'Билет не найден. Возможно, билет подделан. Проверьте билет еще раз, при необходимости позовите менеджера.'
+    };
+  
+
+    return TicketCheckResponse(
+      ticket,
+      false, 
+      errorType,
+      null,
+      errorMessageFriendly,
+      null
+    );
+  }
 }

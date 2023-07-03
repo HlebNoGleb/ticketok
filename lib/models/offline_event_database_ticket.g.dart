@@ -3,6 +3,52 @@
 part of 'offline_event_database_ticket.dart';
 
 // **************************************************************************
+// TypeAdapterGenerator
+// **************************************************************************
+
+class TicketAdapter extends TypeAdapter<Ticket> {
+  @override
+  final int typeId = 2;
+
+  @override
+  Ticket read(BinaryReader reader) {
+    final numOfFields = reader.readByte();
+    final fields = <int, dynamic>{
+      for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
+    };
+    return Ticket(
+      fields[0] as int,
+      fields[1] as String,
+      fields[2] as String?,
+    )..isChecked = fields[3] == null ? false : fields[3] as bool?;
+  }
+
+  @override
+  void write(BinaryWriter writer, Ticket obj) {
+    writer
+      ..writeByte(4)
+      ..writeByte(0)
+      ..write(obj.id)
+      ..writeByte(1)
+      ..write(obj.barcodeHash)
+      ..writeByte(2)
+      ..write(obj.time)
+      ..writeByte(3)
+      ..write(obj.isChecked);
+  }
+
+  @override
+  int get hashCode => typeId.hashCode;
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is TicketAdapter &&
+          runtimeType == other.runtimeType &&
+          typeId == other.typeId;
+}
+
+// **************************************************************************
 // JsonSerializableGenerator
 // **************************************************************************
 
