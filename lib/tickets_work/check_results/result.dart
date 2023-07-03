@@ -1,22 +1,20 @@
 // ignore_for_file: prefer_const_literals_to_create_immutables, prefer_const_constructors
-
-import 'dart:io';
-
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:json_annotation/json_annotation.dart';
-import 'package:qr_code_scanner/qr_code_scanner.dart';
 import 'package:ticketok/models/ticket_check_transaction.dart';
 import 'package:ticketok/tickets_work/manual_input_page.dart';
 import '../../cubits/user_cubit.dart';
 import '../../cubits/user_event_cubit.dart';
+import '../../loader.dart';
 import '../../models/ticket_check_response.dart';
 import '../../models/user.dart';
 import '../../models/user_event.dart';
 import '../../scanner/scan_page.dart';
 import '../../services/ticket_service.dart';
 import '../../services/validation_service.dart';
+import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
+
+
 
 class ScanResult extends StatefulWidget {
   final TicketCheckResponse ticketCheckResponse;
@@ -28,8 +26,12 @@ class ScanResult extends StatefulWidget {
 
 class _ScanResultState extends State<ScanResult>{
 
-   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   TextEditingController ticketIdController = TextEditingController();
+  var maskFormatter = MaskTextInputFormatter(
+    mask: '####-####-####',
+    filter: { "#": RegExp(r'[A-Z]') },
+  );
 
 @override
   Widget build(BuildContext context) {
@@ -47,15 +49,32 @@ class _ScanResultState extends State<ScanResult>{
       body: Center(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             endWorkButton(context),
-            SizedBox(height: 200),
-            icon(widget.ticketCheckResponse.isValid),
-            SizedBox(height: 20),
-            text(widget.ticketCheckResponse),
-            SizedBox(height: 100,),
-            content(widget.ticketCheckResponse, userData.accessToken, currentEvent!.id),
-            SizedBox(child: !widget.ticketCheckResponse.isValid ? goBackButton(context) : null)
+            Column(
+              children: [
+                icon(widget.ticketCheckResponse.isValid),
+                SizedBox(height: 20),
+                Container(
+                  constraints: BoxConstraints(minWidth: 200, maxWidth: 400),
+                  padding: EdgeInsets.all(10),
+                  child: text(widget.ticketCheckResponse)
+                ),
+              ],
+            ),
+            SizedBox(
+              width: 350,
+              child: content(widget.ticketCheckResponse, userData.accessToken, currentEvent!.id)
+            ),
+            SizedBox(
+              child: !widget.ticketCheckResponse.isValid
+                ? Padding(
+                  padding: const EdgeInsets.all(10.0),
+                  child: goBackButton(context),
+                )
+                : null
+            )
           ]
         ),
       ),
@@ -79,13 +98,13 @@ Column text(TicketCheckResponse ticketCheckResponse) {
   var subTitle = "";
 
   switch (ticketCheckResponse.errorType) { // todo - переделать на Enum ErrorType
-    case "not-allowed":
+    case ErrorType.notAllowed:
       title = "Невалидный билет";
       subTitle = "Категория билета не соответствует разрешённым для данного сканера. Объясните гостю, где он может обменять свой билет.";
-    case "re-entry":
+    case ErrorType.reEntry:
       title = "Повторный вход";
       subTitle = "Откажите гостю во входе, объяснив ситуацию. При необходимости, пригласите менеджера входной группы.";
-    case "not-found":
+    case ErrorType.notFound:
       title = "Билет не найден";
       subTitle = "Возможно, билет подделан. Проверьте ещё раз, при необходимости позовите менеджера.";
       break;
@@ -144,9 +163,9 @@ SizedBox content (TicketCheckResponse ticketCheckResponse, String accessToken, n
   var child;
 
   switch (ticketCheckResponse.errorType) { // todo - переделать на Enum ErrorType
-    case "not-allowed":
+    case ErrorType.notAllowed:
       child = null;
-    case "not-found":
+    case ErrorType.reEntry:
       child = Column(
         children: [
           const Text('Транзакции', style: TextStyle(
@@ -156,8 +175,8 @@ SizedBox content (TicketCheckResponse ticketCheckResponse, String accessToken, n
           transactions(ticketCheckResponse.transactions),
         ],
       );
-    // case "not-found":
-    //   child = repeat(accessToken, id, ticketCheckResponse.ticket);
+    case ErrorType.notFound:
+      child = repeat(accessToken, id, ticketCheckResponse.ticket);
       break;
     default:
       child = null;
@@ -177,9 +196,26 @@ Column transactions (List<TicketCheckTransaction>? transactions){
   return Column(children: transactions.map((i) {
     return Row(
       children: [
-        Text(i.datetime.toString()),
-        Text(i.title.toString()),
-        Text("(${i.operatorId}${i.operatorName})"),
+        Padding(
+          padding: const EdgeInsets.only(right: 5),
+          child: Text(i.datetime.toString(), style: TextStyle(
+              color: Colors.grey,
+              fontSize: 14
+          )),
+        ),
+        Padding(
+          padding: const EdgeInsets.only(right: 5),
+          child: Text(i.title.toString(), style: TextStyle(
+              color: Colors.grey,
+              fontSize: 14
+          )),
+        ),
+        i.operatorId != null && i.operatorName != null
+        ? Text("( ${i.operatorId} ${i.operatorName} )", style: TextStyle(
+              color: Colors.grey,
+              fontSize: 14
+          ))
+        : Text(""),
       ],
     );
   }).toList());
@@ -199,6 +235,7 @@ SizedBox repeat(String accessToken, num id, String ticket){
               controller: ticketIdController,
               decoration: const InputDecoration(hintText: 'ID билета'),
               validator: validateTicketId,
+              inputFormatters: [maskFormatter],
             ),
           ),
           Padding(
@@ -229,10 +266,17 @@ SizedBox repeat(String accessToken, num id, String ticket){
 
     Navigator.pop(context);
 
+    Navigator.of(context).push(
+      PageRouteBuilder(pageBuilder: (_, __, ___) => Loader(), opaque: false)
+    );
+
     var ticketResult = await checkTicket(ticketIdController.text, id, accessToken);
-      Navigator.of(context).push(
-        PageRouteBuilder(pageBuilder: (_, __, ___) => ScanResult(ticketCheckResponse: ticketResult,), opaque: false)
-      );
+
+    Navigator.pop(context);
+
+    Navigator.of(context).push(
+      PageRouteBuilder(pageBuilder: (_, __, ___) => ScanResult(ticketCheckResponse: ticketResult,), opaque: false)
+    );
     }
 
 ElevatedButton enterIdByHandsButton() {

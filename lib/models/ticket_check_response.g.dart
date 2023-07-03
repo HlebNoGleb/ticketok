@@ -10,7 +10,7 @@ TicketCheckResponse _$TicketCheckResponseFromJson(Map<String, dynamic> json) =>
     TicketCheckResponse(
       json['ticket'] as String,
       json['is_valid'] as bool,
-      json['error_type'] as String?,
+      $enumDecodeNullable(_$ErrorTypeEnumMap, json['error_type']),
       json['error_msg'] as String?,
       json['error_msg_friendly'] as String?,
       (json['transactions'] as List<dynamic>?)
@@ -24,8 +24,14 @@ Map<String, dynamic> _$TicketCheckResponseToJson(
     <String, dynamic>{
       'ticket': instance.ticket,
       'is_valid': instance.isValid,
-      'error_type': instance.errorType,
+      'error_type': _$ErrorTypeEnumMap[instance.errorType],
       'error_msg': instance.errorMessage,
       'error_msg_friendly': instance.errorMessageFriendly,
       'transactions': instance.transactions,
     };
+
+const _$ErrorTypeEnumMap = {
+  ErrorType.reEntry: 're-entry',
+  ErrorType.notAllowed: 'not-allowed',
+  ErrorType.notFound: 'not-found',
+};

@@ -3,9 +3,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:ticketok/cubits/user_cubit.dart';
 import 'package:ticketok/cubits/user_event_cubit.dart';
+import 'package:ticketok/profile/tabs/settingsTab/settings_tab.dart';
+import 'package:ticketok/scanner/scan_page.dart';
 import 'package:ticketok/services/authorize_service.dart';
 import 'package:ticketok/services/user_event_service.dart';
 import 'package:ticketok/services/validation_service.dart';
+
+import '../loader.dart';
 
 class AuthForm extends StatefulWidget {
   const AuthForm({super.key});
@@ -69,6 +73,10 @@ class _AuthFormState extends State<AuthForm> {
       return;
     }
 
+    Navigator.of(context).push(
+      PageRouteBuilder(pageBuilder: (_, __, ___) => Loader(), opaque: false)
+    );
+
     var authResponse = await authorizeUser(loginController.text, passwordController.text);
 
     if(authResponse.error != null){
@@ -86,5 +94,9 @@ class _AuthFormState extends State<AuthForm> {
     BlocProvider.of<UserEventCubit>(context).setCurrentEvent(event);
 
     Navigator.pop(context);
+
+    Navigator.pop(context);
   }
+
+
 }

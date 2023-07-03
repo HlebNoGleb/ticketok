@@ -17,7 +17,7 @@ class TicketCheckResponse{
   final bool isValid;
 
   @JsonKey(name: 'error_type')
-  final String? errorType;
+  final ErrorType? errorType;
 
   @JsonKey(name: 'error_msg')
   final String? errorMessage;

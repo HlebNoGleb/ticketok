@@ -44,6 +44,8 @@ dependencies:
   json_annotation: ^4.8.1
   hive: ^2.2.3
   hive_flutter: ^1.1.0
+  masked_text: ^1.1.2
+  mask_text_input_formatter: ^2.4.0
 
 dev_dependencies:
   flutter_test:
