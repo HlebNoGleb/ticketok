@@ -1,4 +1,4 @@
-// ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
+// ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables, use_build_context_synchronously
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:ticketok/cubits/user_cubit.dart';
@@ -10,6 +10,7 @@ import 'package:ticketok/services/user_event_service.dart';
 import 'package:ticketok/services/validation_service.dart';
 
 import '../loader.dart';
+import '../profile/profile_main.dart';
 
 class AuthForm extends StatefulWidget {
   const AuthForm({super.key});
@@ -95,7 +96,9 @@ class _AuthFormState extends State<AuthForm> {
 
     Navigator.pop(context);
 
-    Navigator.pop(context);
+    Navigator.pushReplacement(context, MaterialPageRoute(builder: (BuildContext context){
+        return const ProfileMain();
+    }));
   }
 
 

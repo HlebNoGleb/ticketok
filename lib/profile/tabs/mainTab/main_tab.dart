@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:ticketok/endWorkButton.dart';
 import 'package:ticketok/models/user_event.dart';
 import 'package:ticketok/profile/tabs/start_duty_button.dart';
 import 'package:ticketok/services/user_event_service.dart';
@@ -43,8 +44,8 @@ class _MainTabState extends State<MainTab> {
   }
 
   @override
-  Widget build(BuildContext context) {    
-    final UserEvent? currentEvent = context.watch<UserEventCubit>().state;    
+  Widget build(BuildContext context) {
+    final UserEvent? currentEvent = context.watch<UserEventCubit>().state;
 
     return Padding(
       padding: const EdgeInsets.all(16.0),
@@ -94,7 +95,7 @@ class _MainTabState extends State<MainTab> {
               ),
               Flexible(
                 child: Column(
-                  mainAxisAlignment: MainAxisAlignment.start, 
+                  mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.start ,
                   children: [
                     Text(userModel.fullName, overflow: TextOverflow.ellipsis,),
@@ -121,7 +122,7 @@ class _MainTabState extends State<MainTab> {
               ],
             ),
           ),
-          const StartDutyButton()
+          StartDutyButton(context: context),
         ],
       ),
     );

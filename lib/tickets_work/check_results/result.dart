@@ -5,6 +5,7 @@ import 'package:ticketok/models/ticket_check_transaction.dart';
 import 'package:ticketok/tickets_work/manual_input_page.dart';
 import '../../cubits/user_cubit.dart';
 import '../../cubits/user_event_cubit.dart';
+import '../../endWorkButton.dart';
 import '../../loader.dart';
 import '../../models/ticket_check_response.dart';
 import '../../models/user.dart';
@@ -40,7 +41,7 @@ class _ScanResultState extends State<ScanResult>{
 
   var maskFormatter = MaskTextInputFormatter(
     mask: '####-####-####',
-    filter: { "#": RegExp(r'[A-Z]') },
+    filter: { "#": RegExp(r'[A-Z0-9]') },
   );
 
 @override
@@ -61,7 +62,7 @@ class _ScanResultState extends State<ScanResult>{
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            endWorkButton(context),
+            EndWorkButton(context: context),
             Column(
               children: [
                 icon(ticketCheckResponse.isValid),
@@ -325,24 +326,6 @@ ElevatedButton enterIdByHandsButton() {
             child: const Text('ОТКРЫТЬ СКАННЕР', style: TextStyle(
               color: Colors.white,
               fontSize: 18
-            )),
-          );
-  }
-
-  ElevatedButton endWorkButton(BuildContext context) {
-    return ElevatedButton(
-            style: ElevatedButton.styleFrom(
-              shadowColor: Colors.transparent,
-              surfaceTintColor: Colors.transparent,
-              minimumSize: Size.fromHeight(80),
-              shape: const ContinuousRectangleBorder()
-            ),
-            onPressed: (){
-              Navigator.pop(context);
-            },
-            child: const Text("ЗАВЕРШИТЬ СМЕНУ", style: TextStyle(
-              color: Colors.red,
-              fontSize: 18,
             )),
           );
   }

@@ -46,6 +46,7 @@ dependencies:
   hive_flutter: ^1.1.0
   masked_text: ^1.1.2
   mask_text_input_formatter: ^2.4.0
+  confirm_dialog: ^1.0.2
 
 dev_dependencies:
   flutter_test:

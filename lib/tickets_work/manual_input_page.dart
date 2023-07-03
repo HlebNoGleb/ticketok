@@ -24,7 +24,7 @@ class _ManualInputState extends State<ManualInput>{
   TextEditingController ticketIdController = TextEditingController();
    var maskFormatter = MaskTextInputFormatter(
     mask: '####-####-####',
-    filter: { "#": RegExp(r'[A-Z]') },
+    filter: { "#": RegExp(r'[A-Z0-9]') },
   );
 
 
@@ -90,7 +90,7 @@ class _ManualInputState extends State<ManualInput>{
                                     backgroundColor: const Color.fromRGBO(33, 150, 243, 1),
                                     fixedSize: const Size(245, 50)
                                   ),
-                                  onPressed: () => submit(userData.accessToken, currentEvent!.id, context),
+                                  onPressed: () => submit(userData.accessToken, currentEvent!.id),
                                   child: const Text('ОТПРАВИТЬ', style: TextStyle(
                                     color: Colors.white,
                                     fontSize: 18
@@ -128,7 +128,7 @@ class _ManualInputState extends State<ManualInput>{
     );
   }
 
-  void submit(String accessToken, num id, BuildContext context111) async{
+  void submit(String accessToken, num id) async{
 
     if (!_formKey.currentState!.validate()) {
       return;

@@ -6,6 +6,7 @@ import 'package:hive/hive.dart';
 import 'package:ticketok/tickets_work/manual_input_page.dart';
 import 'package:ticketok/services/check_internet_connection_service.dart';
 
+import '../endWorkButton.dart';
 import '../scanner/scan_page.dart';
 
 class TicketsWorkPage extends StatefulWidget{
@@ -62,7 +63,7 @@ class _TicketsWorkPageState extends State<TicketsWorkPage>{
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            endWorkButton(context),
+            EndWorkButton(context: context),
             SizedBox(height: 230),
             Text(hasInternetConnection && !isOfflineMode ? 'Отсканируйте билет' : 'Сканнер в offline', style: TextStyle(fontSize: 24)),
             Text(hasInternetConnection && !isOfflineMode ? 'или введите ID вручную' : 'для продолжения работы подключите устройство к сети', style: TextStyle(fontSize: 16)),
@@ -112,24 +113,6 @@ class _TicketsWorkPageState extends State<TicketsWorkPage>{
             child: const Text('ОТКРЫТЬ СКАННЕР', style: TextStyle(
               color: Colors.white,
               fontSize: 18
-            )),
-          );
-  }
-
-  ElevatedButton endWorkButton(BuildContext context) {
-    return ElevatedButton(
-            style: ElevatedButton.styleFrom(
-              shadowColor: Colors.transparent,
-              surfaceTintColor: Colors.transparent,
-              minimumSize: Size.fromHeight(80),
-              shape: const ContinuousRectangleBorder()
-            ),
-            onPressed: (){
-              Navigator.pop(context);
-            },
-            child: const Text("ЗАВЕРШИТЬ СМЕНУ", style: TextStyle(
-              color: Colors.red,
-              fontSize: 18,
             )),
           );
   }
