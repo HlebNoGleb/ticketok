@@ -5,7 +5,9 @@ import 'package:ticketok/cubits/user_cubit.dart';
 import 'package:ticketok/cubits/user_event_cubit.dart';
 import 'package:ticketok/services/ticket_service.dart';
 import 'package:ticketok/tickets_work/check_results/result.dart';
+import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 
+import '../loader.dart';
 import '../models/user.dart';
 import '../models/user_event.dart';
 import '../services/validation_service.dart';
@@ -20,6 +22,10 @@ class ManualInput extends StatefulWidget {
 class _ManualInputState extends State<ManualInput>{
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   TextEditingController ticketIdController = TextEditingController();
+   var maskFormatter = MaskTextInputFormatter(
+    mask: '####-####-####',
+    filter: { "#": RegExp(r'[A-Z]') },
+  );
 
 
 @override
@@ -74,6 +80,7 @@ class _ManualInputState extends State<ManualInput>{
                                   controller: ticketIdController,
                                   decoration: const InputDecoration(hintText: 'ID билета'),
                                   validator: validateTicketId,
+                                  inputFormatters: [maskFormatter],
                                 ),
                               ),
                               Padding(
@@ -127,9 +134,16 @@ class _ManualInputState extends State<ManualInput>{
       return;
     }
 
+    Navigator.of(context).push(
+      PageRouteBuilder(pageBuilder: (_, __, ___) => Loader(), opaque: false)
+    );
+
     var ticketResult = await checkTicket(ticketIdController.text, id, accessToken);
-      Navigator.of(context).push(
-        PageRouteBuilder(pageBuilder: (_, __, ___) => ScanResult(ticketCheckResponse: ticketResult,), opaque: false)
-      );
+
+    Navigator.pop(context);
+
+    Navigator.of(context).push(
+      PageRouteBuilder(pageBuilder: (_, __, ___) => ScanResult(ticketCheckResponse: ticketResult,), opaque: false)
+    );
     }
   }

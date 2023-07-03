@@ -19,5 +19,5 @@ Future<TicketCheckResponse> checkTicket(String ticket, num eventId, String userT
 
     var json = jsonDecode(httpResponse.body);
 
-    return TicketCheckResponse.fromJson(json['response']); 
+    return TicketCheckResponse.fromJson(json['response']);
 }
