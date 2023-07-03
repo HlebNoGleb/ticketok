@@ -56,9 +56,9 @@ class _ProfileMainState extends State <ProfileMain> {
             Expanded(
               child: TabBarView(
                 children: [
-                  MainTab(userModel: userData),
+                  MainTab(userModel: userData, currentEvent: currentEvent),
                   InfoTab(userModel: userData, currentEvent: currentEvent),
-                  const SettingsTab(),
+                  SettingsTab(userModel: userData,),
                 ],
               ),
             )

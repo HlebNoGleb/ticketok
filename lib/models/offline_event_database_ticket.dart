@@ -8,7 +8,9 @@ class Ticket{
 
   @JsonKey(name: 'barcode_hash')
   final String barcodeHash;
-  final String time;
+  final String? time;
+
+  bool? isChecked = false;
 
   Ticket(this.id, this.barcodeHash, this.time);
 

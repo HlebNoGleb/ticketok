@@ -4,7 +4,15 @@ import 'dart:io';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
+
+import '../cubits/user_cubit.dart';
+import '../cubits/user_event_cubit.dart';
+import '../models/user.dart';
+import '../models/user_event.dart';
+import '../services/ticket_service.dart';
+import '../tickets_work/check_results/result.dart';
 
 class Scan extends StatefulWidget {
   const Scan({super.key});
@@ -32,7 +40,10 @@ class _ScanState extends State<Scan>{
   }
 
 @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context) {      
+    final User userData = context.watch<UserCubit>().state;
+    final UserEvent? currentEvent = context.watch<UserEventCubit>().state;   
+
     return Scaffold(
       backgroundColor: Color.fromRGBO(0, 0, 0, 0.8),
       body: Center(
@@ -81,7 +92,7 @@ class _ScanState extends State<Scan>{
                   height: 190.0,
                   child: QRView(
                     key: qrKey,
-                    onQRViewCreated: _onQRViewCreated,
+                    onQRViewCreated: (QRViewController controller) => _onQRViewCreated(controller, currentEvent!.id, userData.accessToken),
                     overlayMargin: EdgeInsets.all(10),
                   ),
                 ),
@@ -103,11 +114,11 @@ class _ScanState extends State<Scan>{
                     onPressed: toggleFlashlight,
                     child: flashStatus
                     ? Icon(
-                      Icons.flashlight_on,
+                      Icons.flashlight_off,
                       color: Colors.white
                     )
                     : Icon(
-                      Icons.flashlight_off,
+                      Icons.flashlight_on,
                       color: Colors.white
                     ),
                   ),
@@ -158,12 +169,25 @@ class _ScanState extends State<Scan>{
     );
   }
 
-void _onQRViewCreated(QRViewController controller) {
+void _onQRViewCreated(QRViewController controller, num eventId, String accessToken) {
     this.controller = controller;
-    controller.scannedDataStream.listen((scanData) {
+    controller.scannedDataStream.listen((scanData) async {
+
+      if(scanData.format != BarcodeFormat.qrcode){
+        return;
+      }
+      
+      controller.pauseCamera();
+      var ticketResult = await checkTicket(scanData.code!, eventId, accessToken);
+
       setState(() {
         result = scanData;
       });
+      
+      Navigator.of(context).pop();
+      Navigator.of(context).push(
+        PageRouteBuilder(pageBuilder: (_, __, ___) => ScanResult(ticketCheckResponse: ticketResult,), opaque: false)
+      );
     });
   }
 
@@ -174,8 +198,12 @@ void _onQRViewCreated(QRViewController controller) {
   }
 
   void toggleFlashlight() async{
-    flashStatus = (await controller!.getFlashStatus())!;
     await controller?.toggleFlash();
+    var flashStatusResult = (await controller!.getFlashStatus())!;
+
+    setState((){
+      flashStatus = flashStatusResult;
+    });
   }
 }
 

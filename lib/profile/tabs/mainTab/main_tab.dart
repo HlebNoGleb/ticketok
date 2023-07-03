@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:ticketok/models/user_event.dart';
 import 'package:ticketok/profile/tabs/start_duty_button.dart';
 import 'package:ticketok/services/user_event_service.dart';
 import '../../../cubits/user_event_cubit.dart';
@@ -9,22 +10,25 @@ import 'package:ticketok/models/user.dart';
 
 class MainTab extends StatefulWidget {
   final User? userModel;
+  final UserEvent? currentEvent;
 
-  MainTab({super.key, required this.userModel});
+  MainTab({super.key, required this.userModel, required this.currentEvent});
 
   @override
   State<MainTab> createState() => _MainTabState();
 }
 
 class _MainTabState extends State<MainTab> {
-  late UserEventInfo currentEvent;
+  late UserEventInfo currentEventInfo;
   late User userModel;
+  // late UserEvent? currentEvent;
 
   @override
   void initState() {
     super.initState();
-    currentEvent = widget.userModel!.events.first;
+    currentEventInfo = widget.userModel!.events.first;
     userModel = widget.userModel!;
+    // currentEvent = widget.currentEvent;
   }
 
   void changeEvent(UserEventInfo eventInfo) async{
@@ -34,12 +38,14 @@ class _MainTabState extends State<MainTab> {
     BlocProvider.of<UserEventCubit>(context).setCurrentEvent(event);
 
     setState((){
-      currentEvent = eventInfo;
+      currentEventInfo = eventInfo;
     });
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context) {    
+    final UserEvent? currentEvent = context.watch<UserEventCubit>().state;    
+
     return Padding(
       padding: const EdgeInsets.all(16.0),
       child: Column(
@@ -64,7 +70,7 @@ class _MainTabState extends State<MainTab> {
                           child: Container(
                             padding: const EdgeInsets.only(right: 13.0),
                             child: Text(
-                              currentEvent.title,
+                              currentEventInfo.title,
                               overflow: TextOverflow.ellipsis,
                               style: const TextStyle(color: Colors.indigo),
                             ),
@@ -73,7 +79,7 @@ class _MainTabState extends State<MainTab> {
                       ],
                     ),
                   ),
-                  ChangeEvent(changeEvent: changeEvent, events: userModel.events, currentEvent: currentEvent)
+                  ChangeEvent(changeEvent: changeEvent, events: userModel.events, currentEvent: currentEventInfo)
                 ],
               ),
             ),
@@ -110,7 +116,7 @@ class _MainTabState extends State<MainTab> {
                   child: Wrap(
                     spacing: 10,
                     runSpacing: 10,
-                    children: generateSectorChips(userModel.events),),
+                    children: generateSectorChips(currentEvent),),
                 )
               ],
             ),
@@ -121,9 +127,13 @@ class _MainTabState extends State<MainTab> {
     );
   }
 
-  List<Widget> generateSectorChips(List<UserEventInfo> events) {
+  List<Widget> generateSectorChips(UserEvent? userEvent) {
+    if(userEvent == null){
+      return List<Widget>.empty();
+    }
+
     return <Widget>[
-      for(final item in events) Chip(label: Text(item.title)),
+      for(final item in userEvent!.permitedZones) Chip(label: Text(item)),
     ];
   }
 }
