@@ -13,6 +13,7 @@ import '../models/user.dart';
 import '../models/user_event.dart';
 import '../services/ticket_service.dart';
 import '../tickets_work/check_results/result.dart';
+import '../tickets_work/manual_input_page.dart';
 
 class Scan extends StatefulWidget {
   const Scan({super.key});
@@ -131,11 +132,18 @@ class _ScanState extends State<Scan>{
                       backgroundColor: const Color.fromRGBO(86, 204, 242, 1),
                       fixedSize: const Size(245, 50)
                     ),
-                    onPressed: () => {},
-                    child: const Text('ВВЕСТИ ID ВРУЧНУЮ', style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 18
-                    )),
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                      Navigator.of(context).push(
+                        PageRouteBuilder(pageBuilder: (_, __, ___) => ManualInput(), opaque: false)
+                      );
+                    },
+                    child: FittedBox(
+                      child: Text('ВВЕСТИ ID ВРУЧНУЮ', style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 18
+                      )),
+                    ),
                   ),
                 ),
                 ElevatedButton(

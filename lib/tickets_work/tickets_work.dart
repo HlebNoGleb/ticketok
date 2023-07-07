@@ -52,25 +52,28 @@ class _TicketsWorkPageState extends State<TicketsWorkPage>{
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        automaticallyImplyLeading: false,
-        title: const Text('Работа с билетами', style: TextStyle(fontSize: 24, color: Colors.white)),
-        backgroundColor: Color.fromRGBO(33, 150, 243, 1),
-      ),
-      body: Center(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            endWorkButton(context),
-            SizedBox(height: 230),
-            Text(hasInternetConnection && !isOfflineMode ? 'Отсканируйте билет' : 'Сканнер в offline', style: TextStyle(fontSize: 24)),
-            Text(hasInternetConnection && !isOfflineMode ? 'или введите ID вручную' : 'для продолжения работы подключите устройство к сети', style: TextStyle(fontSize: 16)),
-            SizedBox(height: 100,),
-            enterIdByHandsButton(),
-            SizedBox(height: 15),
-            openScannerButton(context)
-          ]
+    return WillPopScope(
+      onWillPop: () async => false,
+      child: Scaffold(
+        appBar: AppBar(
+          automaticallyImplyLeading: false,
+          title: const Text('Работа с билетами', style: TextStyle(fontSize: 24, color: Colors.white)),
+          backgroundColor: Color.fromRGBO(33, 150, 243, 1),
+        ),
+        body: Center(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              endWorkButton(context),
+              SizedBox(height: 230),
+              Text(hasInternetConnection && !isOfflineMode ? 'Отсканируйте билет' : 'Сканнер в offline', style: TextStyle(fontSize: 24)),
+              Text(hasInternetConnection && !isOfflineMode ? 'или введите ID вручную' : 'для продолжения работы подключите устройство к сети', style: TextStyle(fontSize: 16)),
+              SizedBox(height: 100,),
+              enterIdByHandsButton(),
+              SizedBox(height: 15),
+              openScannerButton(context)
+            ]
+          ),
         ),
       ),
     );
@@ -89,10 +92,12 @@ class _TicketsWorkPageState extends State<TicketsWorkPage>{
               );
             }
             : null,
-            child: const Text('ВВЕСТИ ID ВРУЧНУЮ', style: TextStyle(
-              color: Colors.white,
-              fontSize: 18
-            )),
+            child: const FittedBox(
+              child: Text('ВВЕСТИ ID ВРУЧНУЮ', style: TextStyle(
+                color: Colors.white,
+                fontSize: 18
+              )),
+            ),
           );
   }
 
@@ -109,10 +114,12 @@ class _TicketsWorkPageState extends State<TicketsWorkPage>{
               );
             }
             : null,
-            child: const Text('ОТКРЫТЬ СКАННЕР', style: TextStyle(
-              color: Colors.white,
-              fontSize: 18
-            )),
+            child: const FittedBox(
+              child: Text('ОТКРЫТЬ СКАННЕР', style: TextStyle(
+                color: Colors.white,
+                fontSize: 18
+              )),
+            ),
           );
   }
 

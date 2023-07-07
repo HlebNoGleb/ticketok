@@ -11,13 +11,20 @@ import 'auth/auth.dart';
 import 'models/user.dart';
 import 'scanner/scan_page.dart';
 import 'profile/profile_main.dart';
+import 'package:flutter/services.dart';
 
 
 void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await SystemChrome.setPreferredOrientations([
+    DeviceOrientation.portraitUp,
+  ]);
+    
   await Hive.initFlutter();
   Hive.registerAdapter(TicketAdapter());
   Hive.registerAdapter(DatabaseAdapter());
   Hive.registerAdapter(OfflineEventAdapter());
+
   runApp(
     const Ticketok(),
   );
