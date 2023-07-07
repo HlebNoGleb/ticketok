@@ -124,9 +124,12 @@ Column text(TicketCheckResponse ticketCheckResponse) {
       subTitle = "Возможно, билет подделан. Проверьте ещё раз, при необходимости позовите менеджера.";
   }
 
-  return Column(children: [
+  return Column(
+    mainAxisAlignment: MainAxisAlignment.center,
+    crossAxisAlignment: CrossAxisAlignment.center,
+    children: [
     Text(title, style: TextStyle(fontSize: 24)),
-    Text(subTitle, style: TextStyle(fontSize: 16)),
+    Text(subTitle, textAlign: TextAlign.center, style: TextStyle(fontSize: 16, )),
   ]);
 }
 

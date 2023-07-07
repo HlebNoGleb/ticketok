@@ -45,12 +45,13 @@ class _ProfileMainState extends State <ProfileMain> {
           automaticallyImplyLeading: false,
           bottom: const TabBar(
             tabs: [
-               Tab(text: "Главная", ),
-               Tab(text: "Инфо", ),
-                Tab(text: "Настройки", ),
+               Tab(child: Text("Главная", style: TextStyle(fontSize: 15, color: Colors.white)),),
+               Tab(child: Text("Инфо", style: TextStyle(fontSize: 15, color: Colors.white)),),
+                Tab(child: Text("Настройки", style: TextStyle(fontSize: 15, color: Colors.white)),),
             ],
           ),
-          title: const Text('Профиль работника'),
+          title: const Text('Профиль работника', style: TextStyle(fontSize: 24, color: Colors.white)),
+          backgroundColor: Color.fromRGBO(33, 150, 243, 1),
         ),
         body: Column(
           children: [

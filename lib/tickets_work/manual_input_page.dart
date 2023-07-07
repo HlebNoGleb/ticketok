@@ -81,6 +81,7 @@ class _ManualInputState extends State<ManualInput>{
                                   decoration: const InputDecoration(hintText: 'ID билета'),
                                   validator: validateTicketId,
                                   inputFormatters: [maskFormatter],
+                                  textCapitalization: TextCapitalization.characters,
                                 ),
                               ),
                               Padding(

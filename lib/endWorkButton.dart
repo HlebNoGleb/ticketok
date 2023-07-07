@@ -33,25 +33,35 @@ class EndWorkButton extends StatelessWidget {
                   shape: const ContinuousRectangleBorder()
                 ),
                 onPressed: () async {
-                  if (await confirm(
-                      context,
-                      textCancel: Text("Отменить"),
-                      textOK: Text("Завершить"),
-                      content: Text("Вы действительно хотите завершить текущую смену?"),
-                      )) {
-                    endWork(userData.accessToken, currentEvent);
-                  }
+                  await endWorkWithConfirm(context, userData, currentEvent);
                 },
-                child: const Text("ЗАВЕРШИТЬ СМЕНУ", style: TextStyle(
-                  color: Colors.red,
-                  fontSize: 18,
-                )),
+                child: const FittedBox(
+                  child: Text("ЗАВЕРШИТЬ СМЕНУ", style: TextStyle(
+                    color: Colors.red,
+                    fontSize: 18,
+                  )),
+                ),
               );
       }
     );
   }
 
-  void endWork(String accessToken, UserEvent? currentEvent) async {
+  static Future endWorkWithConfirm(BuildContext context, User userData, UserEvent? currentEvent) async {
+    if (await needConfirm(context)) {
+      endWork(context, userData.accessToken, currentEvent);
+    }
+  }
+
+  static Future<bool> needConfirm(BuildContext context) async{
+    return await confirm(
+                      context,
+                      textCancel: Text("Отменить"),
+                      textOK: Text("Завершить"),
+                      content: Text("Вы действительно хотите завершить текущую смену?"),
+                      );
+  }
+
+  static void endWork(BuildContext context, String accessToken, UserEvent? currentEvent) async {
 
     var totalHours = await workStop(accessToken);
 

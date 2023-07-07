@@ -53,38 +53,38 @@ class _MainTabState extends State<MainTab> {
         mainAxisAlignment: MainAxisAlignment.start,
         mainAxisSize: MainAxisSize.max,
         children: [
-          Container(
-            color:  const Color.fromRGBO(229, 246, 253, 1),
-            child: Padding(
-              padding: const EdgeInsets.all(10),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Expanded(
-                    child: Row(
-                      children: [
-                        const Padding(
-                          padding: EdgeInsets.only(right: 10),
-                          child:Icon(Icons.info_outline, color: Colors.indigo),
-                        ),
-                        Flexible(
-                          child: Container(
-                            padding: const EdgeInsets.only(right: 13.0),
-                            child: Text(
-                              currentEventInfo.title,
-                              overflow: TextOverflow.ellipsis,
-                              style: const TextStyle(color: Colors.indigo),
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  ChangeEvent(changeEvent: changeEvent, events: userModel.events, currentEvent: currentEventInfo)
-                ],
-              ),
-            ),
-          ),
+          // Container(
+          //   color:  const Color.fromRGBO(229, 246, 253, 1),
+          //   child: Padding(
+          //     padding: const EdgeInsets.all(10),
+          //     child: Row(
+          //       mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          //       children: [
+          //         Expanded(
+          //           child: Row(
+          //             children: [
+          //               const Padding(
+          //                 padding: EdgeInsets.only(right: 10),
+          //                 child:Icon(Icons.info_outline, color: Colors.indigo),
+          //               ),
+          //               Flexible(
+          //                 child: Container(
+          //                   padding: const EdgeInsets.only(right: 13.0),
+          //                   child: Text(
+          //                     currentEventInfo.title,
+          //                     overflow: TextOverflow.ellipsis,
+          //                     style: const TextStyle(color: Colors.indigo),
+          //                   ),
+          //                 ),
+          //               ),
+          //             ],
+          //           ),
+          //         ),
+          //         ChangeEvent(changeEvent: changeEvent, events: userModel.events, currentEvent: currentEventInfo)
+          //       ],
+          //     ),
+          //   ),
+          // ),
           const SizedBox(height: 16.0),
           Row(children: [
               Padding(
