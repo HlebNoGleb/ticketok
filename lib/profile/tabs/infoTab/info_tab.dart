@@ -7,7 +7,7 @@ import '../../../models/user_event.dart';
 import 'info_schedule.dart';
 
 class InfoTab extends StatelessWidget {
-  
+
   final User? userModel;
   final UserEvent? currentEvent;
 
@@ -23,7 +23,7 @@ class InfoTab extends StatelessWidget {
           const SizedBox(height: 16.0),
           InfoSchedule(timetable: currentEvent!.timetable),
           Divider(),
-          const StartDutyButton()
+          StartDutyButton(context: context)
         ],
       ),
     );

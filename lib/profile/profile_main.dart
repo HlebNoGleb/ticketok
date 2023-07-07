@@ -19,37 +19,38 @@ class ProfileMain extends StatefulWidget {
 class _ProfileMainState extends State <ProfileMain> {
   @override
   void initState() {
-    super.initState(); 
+    super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    return Builder(builder: (BuildContext context) {    
-      
+    return Builder(builder: (BuildContext context) {
+
       final User userData = context.watch<UserCubit>().state;
-      final UserEvent? currentEvent = context.watch<UserEventCubit>().state;        
+      final UserEvent? currentEvent = context.watch<UserEventCubit>().state;
 
       if(userData.isEmpty()){
         Future.microtask(() => Navigator.pushNamed(
-          context, 
+          context,
         "/auth"
         ));
 
-        return Scaffold();
+        return const Scaffold();
       }
 
       return DefaultTabController(
       length: 3,
       child: Scaffold(
         appBar: AppBar(
+          automaticallyImplyLeading: false,
           bottom: const TabBar(
             tabs: [
                Tab(text: "Главная", ),
                Tab(text: "Инфо", ),
-              Tab(text: "Настройки", ),
+                Tab(text: "Настройки", ),
             ],
           ),
-          title: const Text('Tabs Demo'),
+          title: const Text('Профиль работника'),
         ),
         body: Column(
           children: [
