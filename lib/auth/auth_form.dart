@@ -88,11 +88,11 @@ class _AuthFormState extends State<AuthForm> {
       return;
     }
     var user = authResponse.user!;
-    BlocProvider.of<UserCubit>(context).login(user);
+    await BlocProvider.of<UserCubit>(context).login(user);
 
     var event = await GetEventById(user.events.first.id, user.accessToken);
 
-    BlocProvider.of<UserEventCubit>(context).setCurrentEvent(event);
+    await BlocProvider.of<UserEventCubit>(context).setCurrentEvent(event);
 
     Navigator.pop(context);
 

@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:ticketok/models/user_event.dart';
 
+import '../../../models/user_event_time_table.dart';
+
 class InfoSchedule extends StatelessWidget{
   
   List<UserEventTimeTable> timetable;

@@ -36,7 +36,7 @@ class _MainTabState extends State<MainTab> {
 
     var event = await GetEventById(eventInfo.id, userModel.accessToken);
 
-    BlocProvider.of<UserEventCubit>(context).setCurrentEvent(event);
+    await BlocProvider.of<UserEventCubit>(context).setCurrentEvent(event);
 
     setState((){
       currentEventInfo = eventInfo;

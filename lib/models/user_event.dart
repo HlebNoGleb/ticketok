@@ -1,11 +1,22 @@
 import 'dart:core';
 
+import 'package:hive/hive.dart';
+import 'package:ticketok/models/user_event_time_table.dart';
+
+part 'user_event.g.dart';
+
+@HiveType(typeId: 6)
 class UserEvent {
 
+  @HiveField(0)
   num id;
+  @HiveField(1)
   String title;
+  @HiveField(2)
   List<String> permitedZones;
+  @HiveField(3)
   num totalHours;
+  @HiveField(4)
   List<UserEventTimeTable> timetable;
 
 
@@ -24,16 +35,4 @@ class UserEvent {
     permitedZones: (json['permitted_zones'] as List).map((obj) => obj as String).toList(),
     timetable: (json['timetable'] as List).map((obj) => UserEventTimeTable.fromJson(obj)).toList()
   );
-}
-
-class UserEventTimeTable{
-  DateTime from;
-  DateTime to;
-
-  UserEventTimeTable({required this.from,required this.to});
-
-  factory UserEventTimeTable.fromJson(Map<String, dynamic> json) => UserEventTimeTable(
-    from: DateTime.parse(json['from']),
-    to: DateTime.parse(json['to'])
-    );
 }

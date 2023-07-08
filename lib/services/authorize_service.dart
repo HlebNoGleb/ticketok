@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:hive/hive.dart';
 import 'package:http/http.dart';
 import 'package:ticketok/models/auth_response.dart';
 import '../helpers/urls.dart' as Urls;
@@ -19,4 +20,26 @@ Future<AuthResponse> authorizeUser(String login, String pass) async{
     return AuthResponse(user: User.fromJson(json['response'])); 
 }
 
+Future saveUserToHive(User user) async{
+  var userBox = await Hive.openBox('user');
+
+  await userBox.add(user);
+}
+
+Future isUserLoggedIn() async {
+  var userBox = await Hive.openBox('user');
+
+  return userBox.isEmpty;
+}
+
+Future logoutUser() async {
+  var userBox = await Hive.openBox('user');
+
+  await userBox.clear();
+}
  
+Future getUser() async{
+  var userbox = await Hive.openBox('user');
+
+  await userbox.getAt(0);
+}

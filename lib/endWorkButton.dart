@@ -68,7 +68,7 @@ class EndWorkButton extends StatelessWidget {
     if (totalHours != null) {
       if (currentEvent != null){
         currentEvent.totalHours = totalHours;
-        BlocProvider.of<UserEventCubit>(context).setCurrentEvent(currentEvent);
+        await BlocProvider.of<UserEventCubit>(context).setCurrentEvent(currentEvent);
       }
 
       Navigator.pushReplacement(context, MaterialPageRoute(builder: (BuildContext context){

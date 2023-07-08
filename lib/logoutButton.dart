@@ -27,8 +27,8 @@ class LogoutButton extends StatelessWidget {
               minimumSize: Size.fromHeight(80),
               shape: const ContinuousRectangleBorder()
             ),
-            onPressed: (){
-              logout();
+            onPressed: () async {
+              await logout();
             },
             child: const Text("Выйти из аккаунта", style: TextStyle(
               color: Colors.red,
@@ -37,8 +37,9 @@ class LogoutButton extends StatelessWidget {
           );
   }
 
-  void logout() {
-    BlocProvider.of<UserCubit>(context).logout();
+  Future logout() async {
+    await BlocProvider.of<UserCubit>(context).logout();
+    await BlocProvider.of<UserEventCubit>(context).clearEvent();
     Navigator.pushNamed(context, "/");
   }
 }

@@ -6,6 +6,9 @@ import 'package:ticketok/cubits/user_event_cubit.dart';
 import 'package:ticketok/models/offline_event.dart';
 import 'package:ticketok/models/offline_event_database.dart';
 import 'package:ticketok/models/offline_event_database_ticket.dart';
+import 'package:ticketok/models/user_event.dart';
+import 'package:ticketok/models/user_event_info.dart';
+import 'package:ticketok/models/user_event_time_table.dart';
 import 'package:ticketok/tickets_work/tickets_work.dart';
 import 'auth/auth.dart';
 import 'models/user.dart';
@@ -25,22 +28,38 @@ void main() async {
   Hive.registerAdapter(DatabaseAdapter());
   Hive.registerAdapter(OfflineEventAdapter());
 
+  Hive.registerAdapter(UserEventInfoAdapter());
+  Hive.registerAdapter(UserAdapter());
+
+  Hive.registerAdapter(UserEventTimeTableAdapter());
+  Hive.registerAdapter(UserEventAdapter());
+
+
+  var userBox = await Hive.openBox<User>('user');
+  var savedUser = userBox.isEmpty ? null : userBox.getAt(0);
+
+  var userEventBox = await Hive.openBox<UserEvent>('user_event');
+  var savedEvent = userEventBox.isEmpty ? null : userEventBox.getAt(0);
+
   runApp(
-    const Ticketok(),
+    Ticketok(savedUser: savedUser, savedEvent: savedEvent),
   );
 }
 
 class Ticketok extends StatelessWidget {
-  const Ticketok({
-    super.key,
+  late User? savedUser;
+  late UserEvent? savedEvent;
+
+  Ticketok({
+    super.key, this.savedUser, this.savedEvent
   });
 
   @override
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
-        BlocProvider<UserCubit>(create: (BuildContext context) => UserCubit(User.empty())),
-        BlocProvider<UserEventCubit>(create: (BuildContext context) => UserEventCubit(null))
+        BlocProvider<UserCubit>(create: (BuildContext context) => UserCubit(savedUser ?? User.empty())),
+        BlocProvider<UserEventCubit>(create: (BuildContext context) => UserEventCubit(savedEvent))
       ],
       child: MaterialApp(
         theme: ThemeData(

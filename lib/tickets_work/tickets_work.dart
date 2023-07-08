@@ -33,6 +33,7 @@ class _TicketsWorkPageState extends State<TicketsWorkPage>{
     hasInternetConnection = false;
     isOfflineMode = false;
     setAsyncTest();
+    setIsOfflineMode();
 
     hasNetworkSubscription = Connectivity().onConnectivityChanged.listen((ConnectivityResult result) {
       setState((){
@@ -44,7 +45,11 @@ class _TicketsWorkPageState extends State<TicketsWorkPage>{
   void setIsOfflineMode() async {
     var appSettingsBox = await Hive.openBox<bool>('app_settings');
 
-    isOfflineMode = appSettingsBox.get('isOffline') ?? false;
+    var isOfflineModeFromBox = appSettingsBox.get('isOffline') ?? false;
+
+    setState(() {
+      isOfflineMode = isOfflineModeFromBox;
+    });
   }
 
 
