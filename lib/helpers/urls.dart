@@ -1,10 +1,10 @@
 import 'constants.dart' as Constants;
 
-const String AuthUrl = '${Constants.hostName}/api/operator/auth';
-const String LogoutUrl = '${Constants.hostName}/api/operator/logout';
-const String WorkStartUrl = '${Constants.hostName}/api/operator/workStart';
-const String WorkStopUrl = '${Constants.hostName}/api/operator/workStop';
-const String TicketsCheckUrl = '${Constants.hostName}/api/tickets/check';
-const String EventByIdUrl = '${Constants.hostName}/api/events/getById';
-const String GetOfflineBase = '${Constants.hostName}/api/tickets/getOfflineBase';
+const String AuthUrl = '${Constants.hostName}/operator/auth';
+const String LogoutUrl = '${Constants.hostName}/operator/logout';
+const String WorkStartUrl = '${Constants.hostName}/operator/workStart';
+const String WorkStopUrl = '${Constants.hostName}/operator/workStop';
+const String TicketsCheckUrl = '${Constants.hostName}/tickets/check';
+const String EventByIdUrl = '${Constants.hostName}/events/getById';
+const String GetOfflineBase = '${Constants.hostName}/tickets/getOfflineBase';
 

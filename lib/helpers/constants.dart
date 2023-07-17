@@ -1,1 +1,1 @@
-const String hostName = 'https://app.qdenya.com/public';
+const String hostName = 'https://qa.ticketok.by';

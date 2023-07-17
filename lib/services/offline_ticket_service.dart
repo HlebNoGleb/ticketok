@@ -13,7 +13,8 @@ import '../models/offline_event_database_ticket.dart';
 Future<OfflineEvent> downloadOfflineBase(String userToken) async{
     Response httpResponse = await get(Uri.parse(Urls.GetOfflineBase),
       headers: {
-        'authorization': 'Bearer $userToken',
+        // 'authorization': 'Bearer $userToken',
+        'authorization': 'Bearer test_token',
         "Content-Type": "application/x-www-form-urlencoded"
         }
       );
@@ -32,15 +33,6 @@ Future syncDatabase(OfflineEvent event) async{
     box.put(event.eventId, event);
     return;
   }
-
-  for(var databaseCurrent in current.database){
-    var databaseNew = event.database.firstWhere((element) => element.category == databaseCurrent.category);
-
-    for(var checkedTicket in databaseCurrent.tickets.where((element) => element.isChecked == true)){
-      var ticketToCheck = databaseNew.tickets.firstWhere((element) => element.id == checkedTicket.id);
-      ticketToCheck.isChecked = true;
-    }
-  }
   
   box.put(event.eventId, event);
 }
@@ -57,23 +49,20 @@ Future<TicketCheckResponse> checkTicketOffline(String ticket, num eventId) async
 
   var currentEvent = box.getAt(0);
 
-  for(var checkDatabase in currentEvent!.database){
+  var ticketObj = currentEvent!.database.where((element) => element.barcodeHash == ticketHash).firstOrNull;
 
-    var ticketObj = checkDatabase.tickets.where((element) => element.barcodeHash == ticketHash).firstOrNull;
+  if(ticketObj != null){
 
-    if(ticketObj != null){
+    if(ticketObj.time != null){
+      ticketObj.time = DateTime.now().toString();
 
-      if(!ticketObj.isChecked!){
-        ticketObj.isChecked = true;
+      box.put(currentEvent.eventId, currentEvent);
 
-        box.put(currentEvent.eventId, currentEvent);
-
-        return TicketCheckResponse.validTicket(ticket);
-      }
-      
-      if(ticketObj.isChecked!){
-        return TicketCheckResponse.invalidTicket(ticket, ErrorType.reEntry);
-      }
+      return TicketCheckResponse.validTicket(ticket);
+    }
+    
+    if(ticketObj.time != null){
+      return TicketCheckResponse.invalidTicket(ticket, ErrorType.reEntry);
     }
   }
 

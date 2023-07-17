@@ -90,7 +90,10 @@ class _MainTabState extends State<MainTab> {
               Padding(
                 padding: const EdgeInsets.only(right: 10),
                 child: ClipRRect(
-                  child: SizedBox.fromSize(size: const Size.fromRadius(25))
+                  child: SizedBox.fromSize(
+                    size: const Size.fromRadius(25), // Image radius
+                    child: Image.network(userModel.urlPhoto)
+                  )
                 ),
               ),
               Flexible(

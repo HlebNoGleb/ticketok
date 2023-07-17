@@ -1,6 +1,7 @@
 // ignore_for_file: prefer_const_literals_to_create_immutables, prefer_const_constructors
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:intl/intl.dart';
 import 'package:ticketok/models/ticket_check_transaction.dart';
 import 'package:ticketok/tickets_work/manual_input_page.dart';
 import '../../cubits/user_cubit.dart';
@@ -212,7 +213,7 @@ Column transactions (List<TicketCheckTransaction>? transactions){
       children: [
         Padding(
           padding: const EdgeInsets.only(right: 5),
-          child: Text(i.datetime.toString(), style: TextStyle(
+          child: Text(DateFormat("dd-MM hh:mm:ss").format(i.datetime), style: TextStyle(
               color: Colors.grey,
               fontSize: 14
           )),
@@ -308,10 +309,12 @@ ElevatedButton enterIdByHandsButton() {
                 PageRouteBuilder(pageBuilder: (_, __, ___) => ManualInput(), opaque: false)
               );
             },
-            child: const Text('ВВЕСТИ ID ВРУЧНУЮ', style: TextStyle(
-              color: Colors.white,
-              fontSize: 18
-            )),
+            child: FittedBox(
+              child: const Text('ВВЕСТИ ID ВРУЧНУЮ', style: TextStyle(
+                color: Colors.white,
+                fontSize: 18
+              )),
+            ),
           );
   }
 

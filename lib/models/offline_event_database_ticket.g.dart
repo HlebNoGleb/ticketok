@@ -20,21 +20,19 @@ class TicketAdapter extends TypeAdapter<Ticket> {
       fields[0] as int,
       fields[1] as String,
       fields[2] as String?,
-    )..isChecked = fields[3] == null ? false : fields[3] as bool?;
+    );
   }
 
   @override
   void write(BinaryWriter writer, Ticket obj) {
     writer
-      ..writeByte(4)
+      ..writeByte(3)
       ..writeByte(0)
       ..write(obj.id)
       ..writeByte(1)
       ..write(obj.barcodeHash)
       ..writeByte(2)
-      ..write(obj.time)
-      ..writeByte(3)
-      ..write(obj.isChecked);
+      ..write(obj.time);
   }
 
   @override
@@ -56,11 +54,10 @@ Ticket _$TicketFromJson(Map<String, dynamic> json) => Ticket(
       json['id'] as int,
       json['barcode_hash'] as String,
       json['time'] as String?,
-    )..isChecked = json['isChecked'] as bool?;
+    );
 
 Map<String, dynamic> _$TicketToJson(Ticket instance) => <String, dynamic>{
       'id': instance.id,
       'barcode_hash': instance.barcodeHash,
       'time': instance.time,
-      'isChecked': instance.isChecked,
     };

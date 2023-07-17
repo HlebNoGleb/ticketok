@@ -19,7 +19,7 @@ class OfflineEventAdapter extends TypeAdapter<OfflineEvent> {
     return OfflineEvent(
       fields[0] as int,
       fields[1] as int,
-      (fields[2] as List).cast<Database>(),
+      (fields[2] as List).cast<Ticket>(),
     );
   }
 
@@ -54,7 +54,7 @@ OfflineEvent _$OfflineEventFromJson(Map<String, dynamic> json) => OfflineEvent(
       json['operator_id'] as int,
       json['event_id'] as int,
       (json['database'] as List<dynamic>)
-          .map((e) => Database.fromJson(e as Map<String, dynamic>))
+          .map((e) => Ticket.fromJson(e as Map<String, dynamic>))
           .toList(),
     );
 

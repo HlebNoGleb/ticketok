@@ -22,8 +22,8 @@ class AuthForm extends StatefulWidget {
 class _AuthFormState extends State<AuthForm> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
-  TextEditingController loginController = TextEditingController(text: "admin");
-  TextEditingController passwordController = TextEditingController(text: "admin");
+  TextEditingController loginController = TextEditingController();
+  TextEditingController passwordController = TextEditingController();
   String? validationErrror;
 
   @override
@@ -85,6 +85,7 @@ class _AuthFormState extends State<AuthForm> {
         validationErrror = authResponse.error!;
       });
 
+      Navigator.pop(context);
       return;
     }
     var user = authResponse.user!;

@@ -22,13 +22,14 @@ class UserAdapter extends TypeAdapter<User> {
       urlPhoto: fields[2] as String,
       accessToken: fields[3] as String,
       events: (fields[4] as List).cast<UserEventInfo>(),
+      userRole: fields[5] as String,
     );
   }
 
   @override
   void write(BinaryWriter writer, User obj) {
     writer
-      ..writeByte(5)
+      ..writeByte(6)
       ..writeByte(0)
       ..write(obj.operatorId)
       ..writeByte(1)
@@ -38,7 +39,9 @@ class UserAdapter extends TypeAdapter<User> {
       ..writeByte(3)
       ..write(obj.accessToken)
       ..writeByte(4)
-      ..write(obj.events);
+      ..write(obj.events)
+      ..writeByte(5)
+      ..write(obj.userRole);
   }
 
   @override

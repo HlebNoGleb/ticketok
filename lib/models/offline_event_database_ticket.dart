@@ -15,10 +15,7 @@ class Ticket{
   final String barcodeHash;
 
   @HiveField(2)
-  final String? time;
-
-  @HiveField(3, defaultValue: false)
-  bool? isChecked = false;
+  String? time;
 
   Ticket(this.id, this.barcodeHash, this.time);
 

@@ -15,15 +15,18 @@ class User {
   final String accessToken;
   @HiveField(4)
   final List<UserEventInfo> events;
+  @HiveField(5)
+  final String userRole;
 
-  User({required this.operatorId, required this.fullName, required this.urlPhoto, required this.accessToken, required this.events});
+  User({required this.operatorId, required this.fullName, required this.urlPhoto, required this.accessToken, required this.events, required this.userRole});
 
   factory User.fromJson(Map <String, dynamic> json) => User(
     operatorId: json['operator_id'],
     fullName: json['full_name'],
     urlPhoto: json['url_photo'],
     accessToken: json['access_token'],
-    events: (json["events"] as List).map((i) => UserEventInfo.fromJson(i)).toList()
+    events: (json["events"] as List).map((i) => UserEventInfo.fromJson(i)).toList(),
+    userRole: json['role'],
   );
 
   factory User.empty() => User(
@@ -31,7 +34,8 @@ class User {
     fullName: '',
     urlPhoto:'',
     accessToken: '',
-    events: List.empty()
+    events: List.empty(),
+    userRole: ''
   );
 
   bool isEmpty() => operatorId == 0 && events.isEmpty;

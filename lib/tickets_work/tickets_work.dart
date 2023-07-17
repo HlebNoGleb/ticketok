@@ -83,8 +83,8 @@ class _TicketsWorkPageState extends State<TicketsWorkPage>{
             children: [
               EndWorkButton(context: context),
               SizedBox(height: 230),
-              Text(hasInternetConnection && !isOfflineMode ? 'Отсканируйте билет' : 'Сканнер в offline', style: TextStyle(fontSize: 24)),
-              Text(hasInternetConnection && !isOfflineMode ? 'или введите ID вручную' : 'для продолжения работы подключите устройство к сети', style: TextStyle(fontSize: 16)),
+              Text(hasInternetConnection || isOfflineMode ? 'Отсканируйте билет' : 'Сканнер в offline', style: TextStyle(fontSize: 24)),
+              Text(hasInternetConnection || isOfflineMode ? 'или введите ID вручную' : 'для продолжения работы подключите устройство к сети', style: TextStyle(fontSize: 16)),
               SizedBox(height: 100,),
               enterIdByHandsButton(),
               SizedBox(height: 15),
@@ -102,7 +102,7 @@ class _TicketsWorkPageState extends State<TicketsWorkPage>{
               backgroundColor: const Color.fromRGBO(86, 204, 242, 1),
               fixedSize: const Size(245, 50)
             ),
-            onPressed: hasInternetConnection && !isOfflineMode
+            onPressed: hasInternetConnection || isOfflineMode
             ? (){
               Navigator.of(context).push(
                 PageRouteBuilder(pageBuilder: (_, __, ___) => ManualInput(), opaque: false)
@@ -124,7 +124,7 @@ class _TicketsWorkPageState extends State<TicketsWorkPage>{
               backgroundColor: const Color.fromRGBO(33, 150, 243, 1),
               fixedSize: const Size(245, 50)
             ),
-            onPressed: hasInternetConnection && !isOfflineMode
+            onPressed: hasInternetConnection || isOfflineMode
             ? (){
               Navigator.of(context).push(
                 PageRouteBuilder(pageBuilder: (_, __, ___) => Scan(), opaque: false)

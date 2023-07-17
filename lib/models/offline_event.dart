@@ -1,5 +1,6 @@
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:json_annotation/json_annotation.dart';
+import 'package:ticketok/models/offline_event_database_ticket.dart';
 
 import 'offline_event_database.dart';
 
@@ -18,7 +19,7 @@ class OfflineEvent{
   final int eventId;
 
   @HiveField(2)
-  final List<Database> database;
+  final List<Ticket> database;
 
   OfflineEvent(this.operatorId, this.eventId, this.database);
 

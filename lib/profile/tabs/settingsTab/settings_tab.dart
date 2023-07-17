@@ -86,7 +86,7 @@ class SettingsTabState extends State<SettingsTab> {
             ],
           ),
         ),
-        Column(
+        userModel!.userRole != "offline" ? Column() : Column(
           children: [
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
