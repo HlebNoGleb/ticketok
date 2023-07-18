@@ -30,12 +30,12 @@ class _ProfileMainState extends State <ProfileMain> {
       final UserEvent? currentEvent = context.watch<UserEventCubit>().state;
 
       if(userData.isEmpty()){
-        Future.microtask(() => Navigator.pushNamed(
+        Future.microtask(() => Navigator.pushReplacementNamed(
           context,
         "/auth"
         ));
 
-        return const Scaffold();
+        return Container();
       }
 
       return DefaultTabController(

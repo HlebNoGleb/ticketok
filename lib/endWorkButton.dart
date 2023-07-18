@@ -73,17 +73,17 @@ class EndWorkButton extends StatelessWidget {
       return;
     }
 
-    var totalHours = await workStop(accessToken);
+    var totalHours = await workStop(accessToken, context);
 
     if (totalHours != null) {
       if (currentEvent != null){
         currentEvent.totalHours = totalHours;
         await BlocProvider.of<UserEventCubit>(context).setCurrentEvent(currentEvent);
       }
-
-      Navigator.pushReplacement(context, MaterialPageRoute(builder: (BuildContext context){
-        return const ProfileMain();
-      }));
     }
+      
+    Navigator.pushReplacement(context, MaterialPageRoute(builder: (BuildContext context){
+      return const ProfileMain();
+    }));    
   }
 }

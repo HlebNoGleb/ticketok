@@ -59,7 +59,7 @@ class StartDutyButton extends StatelessWidget{
     var appSettingsBox = await Hive.openBox<bool>('app_settings');
     var isOffline = appSettingsBox.get('isOffline') ?? false;
 
-    if (isOffline || await workStart(accessToken)) {
+    if (isOffline || await workStart(accessToken, context)) {
       Navigator.pushNamed(context, "/tickets_work");
     }
   }

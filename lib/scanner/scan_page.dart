@@ -186,7 +186,7 @@ void _onQRViewCreated(QRViewController controller, num eventId, String accessTok
       }
       
       controller.pauseCamera();
-      var ticketResult = await checkTicket(scanData.code!, eventId, accessToken);
+      var ticketResult = await checkTicket(scanData.code!, eventId, accessToken, context);
 
       setState(() {
         result = scanData;

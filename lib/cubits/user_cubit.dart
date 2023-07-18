@@ -7,6 +7,7 @@ class UserCubit extends Cubit<User>{
 
   Future login(User user) async {
     var userBox = await Hive.openBox<User>('user');
+    userBox.clear();
     userBox.add(user);
 
     emit(user);

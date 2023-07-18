@@ -139,7 +139,7 @@ class _ManualInputState extends State<ManualInput>{
       PageRouteBuilder(pageBuilder: (_, __, ___) => Loader(), opaque: false)
     );
 
-    var ticketResult = await checkTicket(ticketIdController.text, id, accessToken);
+    var ticketResult = await checkTicket(ticketIdController.text, id, accessToken, context);
 
     Navigator.pop(context);
 

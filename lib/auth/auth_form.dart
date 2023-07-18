@@ -42,8 +42,11 @@ class _AuthFormState extends State<AuthForm> {
           Padding(padding: const EdgeInsets.symmetric(vertical: 10)),
           TextFormField(
             controller: passwordController,
-            decoration: const InputDecoration(hintText: 'Пароль'),
+            decoration: const InputDecoration(hintText: 'Пароль',),
             validator: validatePassword,
+            obscureText: true,
+            autocorrect: false,
+            enableSuggestions: false,
           ),
           SizedBox(
             width: double.infinity,

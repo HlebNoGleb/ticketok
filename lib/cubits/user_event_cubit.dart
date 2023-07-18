@@ -7,6 +7,7 @@ class UserEventCubit extends Cubit<UserEvent?>{
 
   Future setCurrentEvent(UserEvent event) async{
     var userEventBox = await Hive.openBox<UserEvent>('user_event');
+    userEventBox.clear();
     userEventBox.add(event);
 
     emit(event);

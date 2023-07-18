@@ -132,7 +132,7 @@ class SettingsTabState extends State<SettingsTab> {
       PageRouteBuilder(pageBuilder: (_, __, ___) => Loader(), opaque: false)
     );
 
-    await syncDatabase(userModel!.accessToken);
+    await syncDatabase(userModel!.accessToken, context);
 
     var saved = await getDatabaseData();
 

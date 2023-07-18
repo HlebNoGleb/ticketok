@@ -210,7 +210,7 @@ Column transactions (List<TicketCheckTransaction>? transactions){
   }
 
   return Column(children: transactions.map((i) {
-    return Row(
+    return  Row(
       children: [
         Padding(
           padding: const EdgeInsets.only(right: 5),
@@ -286,7 +286,7 @@ SizedBox repeat(String accessToken, num id, String ticket){
       PageRouteBuilder(pageBuilder: (_, __, ___) => Loader(), opaque: false)
     );
 
-    var ticketResult = await checkTicket(ticketIdController.text, id, accessToken);
+    var ticketResult = await checkTicket(ticketIdController.text, id, accessToken, context);
 
     setState(() {
       ticketCheckResponse = ticketResult;
@@ -326,6 +326,9 @@ ElevatedButton enterIdByHandsButton() {
               fixedSize: const Size(245, 50)
             ),
             onPressed:  (){
+
+              Navigator.popUntil(context, ModalRoute.withName("/tickets_work"));
+
               Navigator.of(context).push(
                 PageRouteBuilder(pageBuilder: (_, __, ___) => Scan(), opaque: false)
               );
