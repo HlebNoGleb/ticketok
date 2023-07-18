@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:hive/hive.dart';
 import 'package:ticketok/profile/profile_main.dart';
 import 'package:ticketok/services/work_service.dart';
 import 'package:confirm_dialog/confirm_dialog.dart';
@@ -62,6 +63,15 @@ class EndWorkButton extends StatelessWidget {
   }
 
   static void endWork(BuildContext context, String accessToken, UserEvent? currentEvent) async {
+    var appSettingsBox = await Hive.openBox<bool>('app_settings');
+    var isOffline = appSettingsBox.get('isOffline') ?? false;
+    if(isOffline){
+      Navigator.pushReplacement(context, MaterialPageRoute(builder: (BuildContext context){
+        return const ProfileMain();
+      }));
+
+      return;
+    }
 
     var totalHours = await workStop(accessToken);
 

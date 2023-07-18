@@ -7,4 +7,5 @@ const String WorkStopUrl = '${Constants.hostName}/operator/workStop';
 const String TicketsCheckUrl = '${Constants.hostName}/tickets/check';
 const String EventByIdUrl = '${Constants.hostName}/events/getById';
 const String GetOfflineBase = '${Constants.hostName}/tickets/getOfflineBase';
+const String SetOfflineBase = '${Constants.hostName}/tickets/setOfflineBase';
 

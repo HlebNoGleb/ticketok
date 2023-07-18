@@ -1,6 +1,7 @@
 import 'package:confirm_dialog/confirm_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:hive/hive.dart';
 import 'package:ticketok/scanner/scan_page.dart';
 
 import '../../cubits/user_cubit.dart';
@@ -55,10 +56,10 @@ class StartDutyButton extends StatelessWidget{
   }
 
   void startWork(String accessToken) async {
+    var appSettingsBox = await Hive.openBox<bool>('app_settings');
+    var isOffline = appSettingsBox.get('isOffline') ?? false;
 
-    var isOk = await workStart(accessToken);
-
-    if (isOk) {
+    if (isOffline || await workStart(accessToken)) {
       Navigator.pushNamed(context, "/tickets_work");
     }
   }

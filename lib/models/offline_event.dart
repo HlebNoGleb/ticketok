@@ -24,4 +24,6 @@ class OfflineEvent{
   OfflineEvent(this.operatorId, this.eventId, this.database);
 
   factory OfflineEvent.fromJson(Map<String, dynamic> json) => _$OfflineEventFromJson(json);
+
+  Map<String, dynamic> toJson() => _$OfflineEventToJson(this);
 }

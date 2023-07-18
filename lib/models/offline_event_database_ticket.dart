@@ -20,4 +20,6 @@ class Ticket{
   Ticket(this.id, this.barcodeHash, this.time);
 
   factory Ticket.fromJson(Map<String, dynamic> json) => _$TicketFromJson(json);
+
+  Map<String, dynamic> toJson() => _$TicketToJson(this);
 }

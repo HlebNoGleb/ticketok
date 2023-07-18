@@ -39,23 +39,31 @@ class TicketCheckResponse{
     null, 
     null);
 
-  factory TicketCheckResponse.invalidTicket(String ticket, ErrorType errorType) {
-    String errorMessageFriendly;
-
-    errorMessageFriendly = switch(errorType){
+  factory TicketCheckResponse.invalidTicket(String ticket, ErrorType errorType, {String? ticketTime}) {
+    
+    var errorMessageFriendly = switch(errorType){
       ErrorType.notAllowed => 'Категория билета не соответствует разрешенным для данного сканера. Объясните гостю, где он может обменять свой билет.',
       ErrorType.reEntry => 'Откажите гостю во входе, объяснив ситуацию. При необходимости пригласите менеджера входной группы.',
       ErrorType.notFound => 'Билет не найден. Возможно, билет подделан. Проверьте билет еще раз, при необходимости позовите менеджера.'
     };
-  
+
+    var errorMessage = switch(errorType){
+      ErrorType.notAllowed => "Невалидный билет",
+      ErrorType.reEntry => "Повторный вход",
+      ErrorType.notFound => "Билет не найден"
+    };
+
+    var transactions = errorType == ErrorType.reEntry && ticketTime != null 
+      ? List<TicketCheckTransaction>.filled(1, new TicketCheckTransaction(0, '', 'Вход', DateTime.parse(ticketTime), null, ''))
+      : null; 
 
     return TicketCheckResponse(
       ticket,
       false, 
       errorType,
-      null,
+      errorMessage,
       errorMessageFriendly,
-      null
+      transactions
     );
   }
 }

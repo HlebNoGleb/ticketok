@@ -109,21 +109,22 @@ Column text(TicketCheckResponse ticketCheckResponse) {
   var title = "";
   var subTitle = "";
 
-  switch (ticketCheckResponse.errorType) { // todo - переделать на Enum ErrorType
-    case ErrorType.notAllowed:
-      title = "Невалидный билет";
-      subTitle = "Категория билета не соответствует разрешённым для данного сканера. Объясните гостю, где он может обменять свой билет.";
-    case ErrorType.reEntry:
-      title = "Повторный вход";
-      subTitle = "Откажите гостю во входе, объяснив ситуацию. При необходимости, пригласите менеджера входной группы.";
-    case ErrorType.notFound:
-      title = "Билет не найден";
-      subTitle = "Возможно, билет подделан. Проверьте ещё раз, при необходимости позовите менеджера.";
-      break;
-    default:
-      title = "Билет не найден";
-      subTitle = "Возможно, билет подделан. Проверьте ещё раз, при необходимости позовите менеджера.";
-  }
+  // switch (ticketCheckResponse.errorType) { // todo - переделать на Enum ErrorType
+  //   case ErrorType.notAllowed:
+  //     title = "Невалидный билет";
+  //     break;
+  //   case ErrorType.reEntry:
+  //     title = "Повторный вход";
+  //     break;
+  //   case ErrorType.notFound:
+  //     title = "Билет не найден";
+  //     break;
+  //   default:
+  //     title = "Билет не найден";
+  // }
+
+  title = ticketCheckResponse.errorMessage!;
+  subTitle = ticketCheckResponse.errorMessageFriendly!;
 
   return Column(
     mainAxisAlignment: MainAxisAlignment.center,

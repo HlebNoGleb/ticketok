@@ -13,8 +13,8 @@ import '../models/offline_event_database_ticket.dart';
 Future<OfflineEvent> downloadOfflineBase(String userToken) async{
     Response httpResponse = await get(Uri.parse(Urls.GetOfflineBase),
       headers: {
-        // 'authorization': 'Bearer $userToken',
-        'authorization': 'Bearer test_token',
+        'authorization': 'Bearer $userToken',
+        // 'authorization': 'Bearer test_token',
         "Content-Type": "application/x-www-form-urlencoded"
         }
       );
@@ -24,17 +24,38 @@ Future<OfflineEvent> downloadOfflineBase(String userToken) async{
     return OfflineEvent.fromJson(json['response']);
 }
 
-Future syncDatabase(OfflineEvent event) async{
+Future<OfflineEvent> syncOfflineBase(String userToken, OfflineEvent event) async{
+    Response httpResponse = await post(Uri.parse(Urls.SetOfflineBase),
+      headers: {
+        'authorization': 'Bearer $userToken',
+        // 'authorization': 'Bearer test_token',
+        "Content-Type": "application/json"
+        },
+      body: jsonEncode(event.database)
+      );
+
+    var json = jsonDecode(httpResponse.body);
+
+    return OfflineEvent.fromJson(json['response']);
+}
+
+Future syncDatabase(String userToken) async{
   var box = await Hive.openBox<OfflineEvent>('offline_events');
   
-  var current = box.get(event.eventId);
+  var current = box.isEmpty ? null : box.getAt(0);
 
   if(current == null){
+    var event = await downloadOfflineBase(userToken);
+
     box.put(event.eventId, event);
+
     return;
-  }
-  
-  box.put(event.eventId, event);
+
+  } 
+
+  var newEvent = await syncOfflineBase(userToken, current);
+
+  box.putAt(0, newEvent);
 }
 
 Future<OfflineEvent?> getDatabaseData() async{
@@ -53,7 +74,7 @@ Future<TicketCheckResponse> checkTicketOffline(String ticket, num eventId) async
 
   if(ticketObj != null){
 
-    if(ticketObj.time != null){
+    if(ticketObj.time == null){
       ticketObj.time = DateTime.now().toString();
 
       box.put(currentEvent.eventId, currentEvent);
@@ -62,7 +83,7 @@ Future<TicketCheckResponse> checkTicketOffline(String ticket, num eventId) async
     }
     
     if(ticketObj.time != null){
-      return TicketCheckResponse.invalidTicket(ticket, ErrorType.reEntry);
+      return TicketCheckResponse.invalidTicket(ticket, ErrorType.reEntry, ticketTime : ticketObj.time);
     }
   }
 
