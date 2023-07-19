@@ -54,7 +54,7 @@ class TicketCheckResponse{
     };
 
     var transactions = errorType == ErrorType.reEntry && ticketTime != null 
-      ? List<TicketCheckTransaction>.filled(1, new TicketCheckTransaction(0, '', 'Вход', DateTime.parse(ticketTime), null, ''))
+      ? List<TicketCheckTransaction>.filled(1, new TicketCheckTransaction(0, '', 'Вход', DateTime.parse(ticketTime), null, '', '','','',''))
       : null; 
 
     return TicketCheckResponse(

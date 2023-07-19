@@ -214,7 +214,7 @@ Column transactions (List<TicketCheckTransaction>? transactions){
       children: [
         Padding(
           padding: const EdgeInsets.only(right: 5),
-          child: Text(DateFormat("dd-MM hh:mm:ss").format(i.datetime), style: TextStyle(
+          child: Text(DateFormat("dd.MM HH:mm:ss").format(i.datetime), style: TextStyle(
               color: Colors.grey,
               fontSize: 14
           )),
@@ -226,11 +226,13 @@ Column transactions (List<TicketCheckTransaction>? transactions){
               fontSize: 14
           )),
         ),
-        i.operatorId != null && i.operatorName != null
-        ? Text("( ${i.operatorId} ${i.operatorName} )", style: TextStyle(
-              color: Colors.grey,
-              fontSize: 14
-          ))
+        i.type == 'purchase' 
+          ? Text("( ${i.email}, ${i.holder}, ${i.card}, ${i.brand} )")
+          : i.operatorId != null && i.operatorName != null
+            ? Text("( ${i.operatorId} ${i.operatorName} )", style: TextStyle(
+                color: Colors.grey,
+                fontSize: 14
+            ))
         : Text(""),
       ],
     );

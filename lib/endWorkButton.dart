@@ -13,12 +13,14 @@ import 'models/user.dart';
 import 'models/user_event.dart';
 
 class EndWorkButton extends StatelessWidget {
-  const EndWorkButton({
+  EndWorkButton({
     super.key,
     required this.context,
+    this.isOffline
   });
 
   final BuildContext context;
+  bool? isOffline;
 
   @override
   Widget build(BuildContext context) {
@@ -34,7 +36,7 @@ class EndWorkButton extends StatelessWidget {
                   shape: const ContinuousRectangleBorder()
                 ),
                 onPressed: () async {
-                  await endWorkWithConfirm(context, userData, currentEvent);
+                  await endWorkWithConfirm(context, userData, currentEvent, isOffline);
                 },
                 child: const FittedBox(
                   child: Text("ЗАВЕРШИТЬ СМЕНУ", style: TextStyle(
@@ -47,9 +49,9 @@ class EndWorkButton extends StatelessWidget {
     );
   }
 
-  static Future endWorkWithConfirm(BuildContext context, User userData, UserEvent? currentEvent) async {
+  static Future endWorkWithConfirm(BuildContext context, User userData, UserEvent? currentEvent, bool? isOffline) async {
     if (await needConfirm(context)) {
-      endWork(context, userData.accessToken, currentEvent);
+      endWork(context, userData.accessToken, currentEvent, isOffline);
     }
   }
 
@@ -62,10 +64,9 @@ class EndWorkButton extends StatelessWidget {
                       );
   }
 
-  static void endWork(BuildContext context, String accessToken, UserEvent? currentEvent) async {
+  static void endWork(BuildContext context, String accessToken, UserEvent? currentEvent, bool? isOffline) async {
     var appSettingsBox = await Hive.openBox<bool>('app_settings');
-    var isOffline = appSettingsBox.get('isOffline') ?? false;
-    if(isOffline){
+    if(isOffline != null && isOffline!){
       Navigator.pushReplacement(context, MaterialPageRoute(builder: (BuildContext context){
         return const ProfileMain();
       }));

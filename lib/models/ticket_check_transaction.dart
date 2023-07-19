@@ -15,7 +15,19 @@ class TicketCheckTransaction{
   @JsonKey(name: 'operator_name')
   final String? operatorName;
 
-  TicketCheckTransaction(this.id, this.type, this.title, this.datetime, this.operatorId, this.operatorName);
+  @JsonKey()
+  final String? holder;
+
+  @JsonKey()
+  final String? card;
+
+  @JsonKey()
+  final String? brand;
+
+  @JsonKey()
+  final String? email;
+
+  TicketCheckTransaction(this.id, this.type, this.title, this.datetime, this.operatorId, this.operatorName, this.holder, this.card, this.brand, this.email);
 
   factory TicketCheckTransaction.fromJson(Map<String, dynamic> json) => _$TicketCheckTransactionFromJson(json);
 }

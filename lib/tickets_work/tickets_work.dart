@@ -69,7 +69,7 @@ class _TicketsWorkPageState extends State<TicketsWorkPage>{
 
     return WillPopScope(
       onWillPop: () async {
-        return await EndWorkButton.endWorkWithConfirm(context, userData, currentEvent);
+        return await EndWorkButton.endWorkWithConfirm(context, userData, currentEvent, !hasInternetConnection && !isOfflineMode);
       },
       child: Scaffold(
         appBar: AppBar(
@@ -81,10 +81,10 @@ class _TicketsWorkPageState extends State<TicketsWorkPage>{
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              EndWorkButton(context: context),
+              EndWorkButton(context: context, isOffline: !hasInternetConnection && !isOfflineMode),
               SizedBox(height: 230),
               Text(hasInternetConnection || isOfflineMode ? 'Отсканируйте билет' : 'Сканнер в offline', style: TextStyle(fontSize: 24)),
-              Text(hasInternetConnection || isOfflineMode ? 'или введите ID вручную' : 'для продолжения работы подключите устройство к сети', style: TextStyle(fontSize: 16)),
+              Text(hasInternetConnection || isOfflineMode ? 'или введите ID вручную' : 'для продолжения работы подключите устройство к сети', style: TextStyle(fontSize: 16), textAlign: TextAlign.center,),
               SizedBox(height: 100,),
               enterIdByHandsButton(),
               SizedBox(height: 15),

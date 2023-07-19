@@ -15,6 +15,10 @@ TicketCheckTransaction _$TicketCheckTransactionFromJson(
       DateTime.parse(json['datetime'] as String),
       json['operator_id'] as int?,
       json['operator_name'] as String?,
+      json['holder'] as String?,
+      json['card'] as String?,
+      json['brand'] as String?,
+      json['email'] as String?,
     );
 
 Map<String, dynamic> _$TicketCheckTransactionToJson(
@@ -26,4 +30,8 @@ Map<String, dynamic> _$TicketCheckTransactionToJson(
       'datetime': instance.datetime.toIso8601String(),
       'operator_id': instance.operatorId,
       'operator_name': instance.operatorName,
+      'holder': instance.holder,
+      'card': instance.card,
+      'brand': instance.brand,
+      'email': instance.email,
     };

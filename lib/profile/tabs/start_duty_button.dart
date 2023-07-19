@@ -6,6 +6,7 @@ import 'package:ticketok/scanner/scan_page.dart';
 
 import '../../cubits/user_cubit.dart';
 import '../../models/user.dart';
+import '../../services/check_internet_connection_service.dart';
 import '../../services/work_service.dart';
 
 class StartDutyButton extends StatelessWidget{
@@ -58,8 +59,9 @@ class StartDutyButton extends StatelessWidget{
   void startWork(String accessToken) async {
     var appSettingsBox = await Hive.openBox<bool>('app_settings');
     var isOffline = appSettingsBox.get('isOffline') ?? false;
+    var hasInternet = await checkInternetConnection();
 
-    if (isOffline || await workStart(accessToken, context)) {
+    if (isOffline || (hasInternet && await workStart(accessToken, context))) {
       Navigator.pushNamed(context, "/tickets_work");
     }
   }
