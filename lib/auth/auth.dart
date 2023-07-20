@@ -13,7 +13,11 @@ class Auth extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Image.asset('assets/images/logo.png'),
+            SizedBox(
+                height: 50,
+                width: 50,
+                child: Image.asset('assets/images/logo.png')
+              ),
             Text("Вход в Ticketok",
               style: TextStyle(
                   decoration: TextDecoration.none,

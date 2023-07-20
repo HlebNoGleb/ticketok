@@ -209,8 +209,12 @@ Column transactions (List<TicketCheckTransaction>? transactions){
     return Column();
   }
 
-  return Column(children: transactions.map((i) {
-    return  Row(
+  return Column(
+    mainAxisAlignment: MainAxisAlignment.start,
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: transactions.map((i) {
+    return  Wrap(
+      // mainAxisSize: MainAxisSize.max,
       children: [
         Padding(
           padding: const EdgeInsets.only(right: 5),
@@ -226,14 +230,15 @@ Column transactions (List<TicketCheckTransaction>? transactions){
               fontSize: 14
           )),
         ),
-        i.type == 'purchase' 
+        i.type == 'purchase'
           ? Text("( ${i.email}, ${i.holder}, ${i.card}, ${i.brand} )")
           : i.operatorId != null && i.operatorName != null
             ? Text("( ${i.operatorId} ${i.operatorName} )", style: TextStyle(
                 color: Colors.grey,
                 fontSize: 14
             ))
-        : Text(""),
+        : Text("")
+
       ],
     );
   }).toList());

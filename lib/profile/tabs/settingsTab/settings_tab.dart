@@ -51,7 +51,11 @@ class SettingsTabState extends State<SettingsTab> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Image.asset('assets/images/logo.png'),
+              SizedBox(
+                height: 50,
+                width: 50,
+                child: Image.asset('assets/images/logo.png')
+              ),
               Text("Ticketok",
                 style: TextStyle(
                     decoration: TextDecoration.none,
