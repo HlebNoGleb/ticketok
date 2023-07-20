@@ -1,6 +1,10 @@
 // ignore_for_file: prefer_const_literals_to_create_immutables, prefer_const_constructors
+import 'dart:async';
+
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:hive/hive.dart';
 import 'package:intl/intl.dart';
 import 'package:ticketok/models/ticket_check_transaction.dart';
 import 'package:ticketok/tickets_work/manual_input_page.dart';
@@ -12,6 +16,7 @@ import '../../models/ticket_check_response.dart';
 import '../../models/user.dart';
 import '../../models/user_event.dart';
 import '../../scanner/scan_page.dart';
+import '../../services/check_internet_connection_service.dart';
 import '../../services/ticket_service.dart';
 import '../../services/validation_service.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
@@ -33,11 +38,45 @@ class _ScanResultState extends State<ScanResult>{
 
   late TicketCheckResponse ticketCheckResponse;
 
+  late bool hasInternetConnection;
+  late bool isOfflineMode;
+
+  late StreamSubscription<ConnectivityResult> hasNetworkSubscription;
+
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     ticketCheckResponse = widget.ticketCheckResponse;
+
+    hasInternetConnection = false;
+    isOfflineMode = false;
+    setAsyncTest();
+    setIsOfflineMode();
+
+    hasNetworkSubscription = Connectivity().onConnectivityChanged.listen((ConnectivityResult result) {
+      setState((){
+      hasInternetConnection = checkInternetByConnectivityResult(result);
+      });
+    });
+  }
+
+  void setIsOfflineMode() async {
+    var appSettingsBox = await Hive.openBox<bool>('app_settings');
+
+    var isOfflineModeFromBox = appSettingsBox.get('isOffline') ?? false;
+
+    setState(() {
+      isOfflineMode = isOfflineModeFromBox;
+    });
+  }
+
+
+  Future setAsyncTest() async{
+    var hasConnection = await checkInternetConnection();
+
+    setState((){
+      hasInternetConnection = hasConnection;
+    });
   }
 
   var maskFormatter = MaskTextInputFormatter(
@@ -63,7 +102,8 @@ class _ScanResultState extends State<ScanResult>{
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            EndWorkButton(context: context),
+            // EndWorkButton(context: context),
+            EndWorkButton(context: context, isOffline: !hasInternetConnection && !isOfflineMode),
             Column(
               children: [
                 icon(ticketCheckResponse.isValid),
@@ -75,9 +115,12 @@ class _ScanResultState extends State<ScanResult>{
                 ),
               ],
             ),
-            SizedBox(
-              width: 350,
-              child: content(ticketCheckResponse, userData.accessToken, currentEvent!.id)
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: SizedBox(
+                width: 370,
+                child: content(ticketCheckResponse, userData.accessToken, currentEvent!.id)
+              ),
             ),
             SizedBox(
               child: !ticketCheckResponse.isValid
@@ -204,44 +247,54 @@ SizedBox content (TicketCheckResponse ticketCheckResponse, String accessToken, n
   );
 }
 
-Column transactions (List<TicketCheckTransaction>? transactions){
+Expanded transactions (List<TicketCheckTransaction>? transactions){
   if (transactions == null) {
-    return Column();
+    return Expanded(
+      child: Text(""),
+    );
   }
 
-  return Column(
-    mainAxisAlignment: MainAxisAlignment.start,
-    crossAxisAlignment: CrossAxisAlignment.start,
-    children: transactions.map((i) {
-    return  Wrap(
-      // mainAxisSize: MainAxisSize.max,
-      children: [
-        Padding(
-          padding: const EdgeInsets.only(right: 5),
-          child: Text(DateFormat("dd.MM HH:mm:ss").format(i.datetime), style: TextStyle(
-              color: Colors.grey,
-              fontSize: 14
-          )),
-        ),
-        Padding(
-          padding: const EdgeInsets.only(right: 5),
-          child: Text(i.title.toString(), style: TextStyle(
-              color: Colors.grey,
-              fontSize: 14
-          )),
-        ),
-        i.type == 'purchase'
-          ? Text("( ${i.email}, ${i.holder}, ${i.card}, ${i.brand} )")
-          : i.operatorId != null && i.operatorName != null
-            ? Text("( ${i.operatorId} ${i.operatorName} )", style: TextStyle(
-                color: Colors.grey,
-                fontSize: 14
-            ))
-        : Text("")
+  return Expanded(
+    flex: 1,
+    child: Container(
+      // color: Colors.amberAccent,
+      child: SingleChildScrollView(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: transactions.map((i) {
+          return  Wrap(
+            // mainAxisSize: MainAxisSize.max,
+            children: [
+              Padding(
+                padding: const EdgeInsets.only(right: 5),
+                child: Text(DateFormat("dd.MM HH:mm:ss").format(i.datetime), style: TextStyle(
+                    color: Colors.grey,
+                    fontSize: 14
+                )),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(right: 5),
+                child: Text(i.title.toString(), style: TextStyle(
+                    color: Colors.grey,
+                    fontSize: 14
+                )),
+              ),
+              i.type == 'purchase'
+                ? Text("( ${i.email}, ${i.holder}, ${i.card}, ${i.brand} )")
+                : i.operatorId != null && i.operatorName != null
+                  ? Text("( ${i.operatorId} ${i.operatorName} )", style: TextStyle(
+                      color: Colors.grey,
+                      fontSize: 14
+                  ))
+              : Text("")
 
-      ],
-    );
-  }).toList());
+            ],
+          );
+        }).toList()),
+      ),
+    ),
+  );
 }
 
 SizedBox repeat(String accessToken, num id, String ticket){
